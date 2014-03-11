@@ -10,6 +10,12 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE"
+    }
+  ],
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.7.2",
@@ -20,6 +26,9 @@
     "grunt-cli": "~0.1.13"
   },
   "dependencies": {
-    "browserify": "~3.32.1"
+    "browserify": "~3.32.1",
+    "request": "~2.34.0",
+    "winston": "~0.7.2",
+    "q": "~1.0.1"
   }
 }
