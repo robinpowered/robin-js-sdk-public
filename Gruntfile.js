@@ -1,3 +1,4 @@
+'use strict';
 /*global module:false*/
 module.exports = function(grunt) {
 
@@ -32,26 +33,12 @@ module.exports = function(grunt) {
     },
     jshint: {
       options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        globals: {}
+        jshintrc: '.jshintrc',
+        reporter: require('jshint-stylish')
       },
-      gruntfile: {
-        src: 'Gruntfile.js'
-      },
-      lib_test: {
-        src: ['lib/**/*.js', 'test/**/*.js']
-      }
+      all: [
+        'Gruntfile.js', 'robin.js', 'lib/**/*.js', 'test/**/*.js'
+      ]
     },
     qunit: {
       files: ['test/**/*.html']
@@ -76,6 +63,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+  grunt.registerTask('compile', ['jshint', 'qunit', 'concat', 'uglify']);
 
 };
