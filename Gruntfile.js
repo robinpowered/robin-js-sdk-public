@@ -40,8 +40,8 @@ module.exports = function(grunt) {
         'Gruntfile.js', 'robin.js', 'lib/**/*.js', 'test/**/*.js'
       ]
     },
-    qunit: {
-      files: ['test/**/*.html']
+    nodeunit: {
+      files: ['test/**/test*.js']
     },
     watch: {
       gruntfile: {
@@ -59,10 +59,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
-  grunt.registerTask('compile', ['jshint', 'qunit', 'concat', 'uglify']);
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('test', ['nodeunit']);
+  grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
 
 };

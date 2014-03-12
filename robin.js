@@ -5,26 +5,21 @@ var devices = require ("./lib/devices"),
   settings = require ("./lib/settings"),
   users = require ("./lib/users");
 
-function Robin (access_token) {
+function Robin (authToken) {
 
-  this.util = sdk_utils;
+  // Keep utils private
+  this._utils = sdk_utils;
+  this._utils.setAuthToken(authToken);
 
-  this.init(access_token);
+  // Public Robin Modules
+  this.devices = new devices(this);
+  // modules = (function (robin) {
+  //   return {
+  //     devices: new Devices(robin)
+  //   }
+  // })(this);
+
 
 }
-
-Robin.prototype.init = function (access_token) {
-
-  this.util.setAuthToken(access_token);
-
-};
-
-Robin.prototype.devices = devices;
-
-Robin.prototype.organizations = organizations,
-
-Robin.prototype.settings = settings,
-
-Robin.prototype.users = users;
 
 module.exports = Robin;
