@@ -5,14 +5,14 @@ var Robin = require("../robin"),
 var robinObjects = {
 
   user: function () {
-    robin = new Robin();
+    robin = Robin();
     robin.setAuthToken(testConfig.tokens.user);
     robin.setBaseUrl(testConfig.rbnCoreEndpoint);
     return robin;
   },
 
   admin: function () {
-    robin = new Robin();
+    robin = Robin();
     robin.setAuthToken(testConfig.tokens.admin);
     robin.setBaseUrl(testConfig.rbnCoreEndpoint);
     return robin;
