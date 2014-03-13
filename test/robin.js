@@ -6,15 +6,15 @@ var robinObjects = {
 
   user: function () {
     robin = Robin();
-    robin.setAuthToken(testConfig.tokens.user);
-    robin.setBaseUrl(testConfig.rbnCoreEndpoint);
+    robin.api.setAuthToken(testConfig.tokens.user);
+    robin.api.setBaseUrl(testConfig.rbnCoreEndpoint);
     return robin;
   },
 
   admin: function () {
     robin = Robin();
-    robin.setAuthToken(testConfig.tokens.admin);
-    robin.setBaseUrl(testConfig.rbnCoreEndpoint);
+    robin.api.setAuthToken(testConfig.tokens.admin);
+    robin.api.setBaseUrl(testConfig.rbnCoreEndpoint);
     return robin;
   }
 

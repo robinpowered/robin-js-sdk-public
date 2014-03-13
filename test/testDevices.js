@@ -5,7 +5,7 @@ exports.testGetAllDevices = function (test) {
 
   test.expect(1);
   var robin = robinObjects.admin();
-  robin.devices.getAll().then(function (resp) {
+  robin.api.devices.getAll().then(function (resp) {
     test.ok(resp);
   })
   .fail(function (err) {
@@ -21,7 +21,7 @@ exports.testGetUserDevices = function (test) {
 
   test.expect(1);
   var robin = robinObjects.user();
-  robin.devices.getUserDevices().then(function (resp) {
+  robin.api.devices.getUserDevices().then(function (resp) {
     test.ok(resp);
   })
   .fail(function (err) {
