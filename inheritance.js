@@ -1,24 +1,11 @@
+'use strict';
+
 /*
 * Setup Inheritance
 */
 
-// function Inherits () {
-
-//   if (!(this instanceof Inherits)) {
-//     return new Inherits();
-//   }
-
-//   Inherits.apply(this, arguments);
-//   this.setup();
-//   return this;
-
-// }
-
-// Inherits.prototype.setup = function () {
-
-// };
-
 exports.setup = function () {
+
   if (typeof Object.create !== 'function') {
     Object.create = function (o) {
       function F() {}
@@ -38,4 +25,5 @@ exports.setup = function () {
       value: this
     });
   };
+
 };

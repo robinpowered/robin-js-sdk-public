@@ -1,3 +1,5 @@
+'use strict';
+
 var RobinApi = require('./robin_api'),
   inheritance = require('./inheritance'),
   socketio = require('socket.io');

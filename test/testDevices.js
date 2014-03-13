@@ -1,3 +1,5 @@
+'use strict';
+
 var robinObjects = require("./robin"),
   q = require("q");
 

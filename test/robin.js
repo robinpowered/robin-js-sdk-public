@@ -1,3 +1,5 @@
+'use strict';
+
 var Robin = require("../robin"),
   testConfig = require("./config");
 
