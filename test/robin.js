@@ -7,19 +7,19 @@ var Robin = require("../robin"),
 var robinObjects = {
 
   user: function () {
-    robin = Robin();
+    var robin = new Robin();
     robin.api.setAuthToken(testConfig.tokens.user);
     robin.api.setBaseUrl(testConfig.rbnCoreEndpoint);
     return robin;
   },
 
   admin: function () {
-    robin = Robin();
+    var robin = Robin();
     robin.api.setAuthToken(testConfig.tokens.admin);
     robin.api.setBaseUrl(testConfig.rbnCoreEndpoint);
     return robin;
   }
 
-}
+};
 
 module.exports = robinObjects;
