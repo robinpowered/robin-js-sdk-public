@@ -17,6 +17,7 @@ var robinObjects = require("./index"),
 exports.testGetAllDevices = function (test) {
 
   test.expect(3);
+  var firstResp;
   try {
     var robin = robinObjects.admin();
   }
@@ -26,19 +27,20 @@ exports.testGetAllDevices = function (test) {
   }
   robin.api.devices.getAll().then(function (resp) {
     console.log("First Response");
-    console.log("resp", resp);
+    firstResp = resp;
     test.ok(resp);
     return resp.nextPage();
   })
   .then(function (nextPageResp) {
-    console.log("nextPageResp", nextPageResp);
+    console.log("Next Page Response");
     test.ok(nextPageResp);
     return nextPageResp.prevPage();
   })
   .then(function (prevPageResp) {
+    console.log("Previous Page Response");
     console.log("Should be the same as the first response");
-    console.log("prevPageResp", prevPageResp);
-    test.ok(prevPageResp);
+    //Only test meta and data properties
+    test.deepEqual([prevPageResp.meta, prevPageResp.data], [firstResp.meta, firstResp.data], "First and last responses don't match");
   })
   .catch(function (err) {
     console.log("Err", err);
