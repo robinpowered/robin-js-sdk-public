@@ -1,4 +1,3 @@
-'use strict';
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -19,14 +18,15 @@ var RobinApi = require('./lib/api'),
   EventEmitter = require('events').EventEmitter;
 
 Robin = (function(_super) {
-  util.__extends(_Robin, _super);
 
-  function _Robin () {
-    _Robin.__super__.constructor.apply(this, arguments);
+  function Robin () {
+    Robin.__super__.constructor.apply(this, arguments);
     this.api = new RobinApi();
   }
 
-  return _Robin;
+  util.__extends(Robin, _super);
+
+  return Robin;
 
 })(EventEmitter);
 
