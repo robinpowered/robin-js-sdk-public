@@ -11,8 +11,7 @@
  * by this module.
  */
 
-var robinObjects = require("./index"),
-  q = require("q");
+var robinObjects = require("./index");
 
 exports.testGetAllDevices = function (test) {
 
@@ -20,36 +19,37 @@ exports.testGetAllDevices = function (test) {
   var firstResp;
   try {
     var robin = robinObjects.admin();
+
+    robin.api.devices.getAll().then(function (resp) {
+      console.log("First Response");
+      firstResp = resp;
+      test.ok(resp);
+      return resp.nextPage();
+    })
+    .then(function (nextPageResp) {
+      console.log("Next Page Response");
+      test.ok(nextPageResp);
+      return nextPageResp.prevPage();
+    })
+    .then(function (prevPageResp) {
+      console.log("Previous Page Response");
+      console.log("Should be the same as the first response");
+      //Only test meta and data properties
+      test.deepEqual([prevPageResp.meta, prevPageResp.data], [firstResp.meta, firstResp.data], "First and last responses don't match");
+    })
+    .catch(function (err) {
+      console.log("Err", err);
+    })
+    .then(function () {
+      test.done();
+    });
   }
   catch (e) {
     console.log(e.stack);
     return;
   }
-  robin.api.devices.getAll().then(function (resp) {
-    console.log("First Response");
-    firstResp = resp;
-    test.ok(resp);
-    return resp.nextPage();
-  })
-  .then(function (nextPageResp) {
-    console.log("Next Page Response");
-    test.ok(nextPageResp);
-    return nextPageResp.prevPage();
-  })
-  .then(function (prevPageResp) {
-    console.log("Previous Page Response");
-    console.log("Should be the same as the first response");
-    //Only test meta and data properties
-    test.deepEqual([prevPageResp.meta, prevPageResp.data], [firstResp.meta, firstResp.data], "First and last responses don't match");
-  })
-  .catch(function (err) {
-    console.log("Err", err);
-  })
-  .then(function () {
-    test.done();
-  });
 
-}
+};
 
 exports.testGetUserDevices = function (test) {
 
@@ -65,4 +65,4 @@ exports.testGetUserDevices = function (test) {
     test.done();
   });
 
-}
+};

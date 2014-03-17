@@ -14,7 +14,6 @@ var Robin;
 
 var RobinApi = require('./lib/api'),
   util = require('./lib/util'),
-  io = require('socket.io'),
   EventEmitter = require('events').EventEmitter;
 
 Robin = (function(_super) {
