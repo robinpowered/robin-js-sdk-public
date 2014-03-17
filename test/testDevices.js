@@ -11,7 +11,7 @@
  * by this module.
  */
 
-var robinObjects = require("./robin"),
+var robinObjects = require("./index"),
   q = require("q");
 
 exports.testGetAllDevices = function (test) {
