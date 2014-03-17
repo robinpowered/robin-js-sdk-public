@@ -1,32 +1,34 @@
 'use strict';
+/*
+ * robin-js-sdk
+ * http://getrobin.com/
+ *
+ * Copyright (c) 2014 Robin Powered Inc.
+ * Licensed under the Apache v2 license.
+ * https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE
+ *
+ * When this module is required in JavaScript source, it will allow a
+ * child class to extend a parent class, by invoking the function exported
+ * by this module.
+ */
+var Robin;
 
-var RobinApi = require('./robin_api'),
-  inheritance = require('./inheritance'),
+var RobinApi = require('./lib/api'),
+  util = require('./lib/util'),
   io = require('socket.io'),
   EventEmitter = require('events').EventEmitter;
 
-inheritance.setup();
+Robin = (function(_super) {
+  util.__extends(_Robin, _super);
 
-function Robin () {
-
-  if (!(this instanceof Robin)) {
-    return new Robin();
+  function _Robin () {
+    _Robin.__super__.constructor.apply(this, arguments);
+    this.api = new RobinApi();
   }
 
-  EventEmitter.apply(this, arguments);
+  return _Robin;
 
-  this.api = new RobinApi();
-
-  return this;
-}
-
-Robin.inherits(EventEmitter);
-
-try {
-  var r = Robin();
-}
-catch (e) {
-  console.log(e.stack);
-}
+})(EventEmitter);
 
 module.exports = Robin;
+
