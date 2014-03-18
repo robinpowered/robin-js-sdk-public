@@ -34,4 +34,3 @@ Robin = (function(_super) {
 })(EventEmitter);
 
 module.exports = Robin;
-
