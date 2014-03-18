@@ -1,3 +1,4 @@
+'use strict';
 /*global module:false*/
 module.exports = function(grunt) {
 
@@ -32,29 +33,15 @@ module.exports = function(grunt) {
     },
     jshint: {
       options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        globals: {}
+        jshintrc: '.jshintrc',
+        reporter: require('jshint-stylish')
       },
-      gruntfile: {
-        src: 'Gruntfile.js'
-      },
-      lib_test: {
-        src: ['lib/**/*.js', 'test/**/*.js']
-      }
+      all: [
+        'Gruntfile.js', 'robin.js', 'lib/**/*.js', 'test/**/*.js'
+      ]
     },
-    qunit: {
-      files: ['test/**/*.html']
+    nodeunit: {
+      all: ['test/**/test*.js']
     },
     watch: {
       gruntfile: {
@@ -72,10 +59,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('test', function (file) {
+    if (file) {
+      var filePath;
+      filePath = 'test/test' + file + '.js';
+      console.log(filePath);
+      grunt.config('nodeunit.all', [filePath]);
+    }
+    grunt.task.run('nodeunit');
+  });
+  grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
 
 };
