@@ -6,9 +6,6 @@
  * Licensed under the Apache v2 license.
  * https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE
  *
- * When this module is required in JavaScript source, it will allow a
- * child class to extend a parent class, by invoking the function exported
- * by this module.
  */
 var Robin;
 
@@ -18,16 +15,12 @@ var RobinApi = require('./lib/api'),
 
 Robin = (function(_super) {
 
-  function Robin () {
-    Robin.__super__.constructor.apply(this, arguments);
-
+  function Robin (_apiToken, _baseUrl) {
+    Robin.__super__.constructor.call(this);
+    this.api = new RobinApi(_apiToken, _baseUrl);
   }
 
   util.__extends(Robin, _super);
-
-  Robin.prototype.api = (function () {
-    return new RobinApi();
-  })();
 
   return Robin;
 

@@ -6,9 +6,6 @@
  * Licensed under the Apache v2 license.
  * https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE
  *
- * When this module is required in JavaScript source, it will allow a
- * child class to extend a parent class, by invoking the function exported
- * by this module.
  */
 
 var robinObjects = require("./");
@@ -19,10 +16,8 @@ exports.testGetAllDeviceManifests = function (test) {
 
   var robin;
   robin = robinObjects.admin();
-  console.log(robin.api);
   robin.api.devicemanifests.getAll()
   .then(function (resp) {
-    console.log(resp);
     test.ok(resp);
   })
   .fail(function (err) {
