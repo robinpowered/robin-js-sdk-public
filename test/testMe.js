@@ -11,21 +11,26 @@
  * by this module.
  */
 
-var robinObjects = require("./");
+var robinObjects;
 
-exports.testGetUserOrganizations = function (test) {
+robinObjects = require('./');
+
+exports.testGetMe = function (test) {
 
   test.expect(1);
 
   var robin;
 
   robin = robinObjects.user();
-  robin.api.organizations.getUserOrganizations()
+
+  robin.api.me.get()
   .then(function (resp) {
     test.ok(resp);
   })
-  .catch(function (err) {
+  .fail(function (err) {
     console.log("Err", err);
+    console.log(err.stack);
+    return false;
   })
   .then(function () {
     test.done();

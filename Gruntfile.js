@@ -41,7 +41,7 @@ module.exports = function(grunt) {
       ]
     },
     nodeunit: {
-      files: ['test/**/test*.js']
+      all: ['test/**/test*.js']
     },
     watch: {
       gruntfile: {
@@ -65,7 +65,15 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('test', ['nodeunit']);
+  grunt.registerTask('test', function (file) {
+    if (file) {
+      var filePath;
+      filePath = 'test/test' + file + '.js';
+      console.log(filePath);
+      grunt.config('nodeunit.all', [filePath]);
+    }
+    grunt.task.run('nodeunit');
+  });
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
 
 };

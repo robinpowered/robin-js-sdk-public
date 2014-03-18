@@ -20,10 +20,14 @@ Robin = (function(_super) {
 
   function Robin () {
     Robin.__super__.constructor.apply(this, arguments);
-    this.api = new RobinApi();
+
   }
 
   util.__extends(Robin, _super);
+
+  Robin.prototype.api = (function () {
+    return new RobinApi();
+  })();
 
   return Robin;
 

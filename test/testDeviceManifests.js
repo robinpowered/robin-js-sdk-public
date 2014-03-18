@@ -13,19 +13,21 @@
 
 var robinObjects = require("./");
 
-exports.testGetUserOrganizations = function (test) {
+exports.testGetAllDeviceManifests = function (test) {
 
   test.expect(1);
 
   var robin;
-
-  robin = robinObjects.user();
-  robin.api.organizations.getUserOrganizations()
+  robin = robinObjects.admin();
+  console.log(robin.api);
+  robin.api.devicemanifests.getAll()
   .then(function (resp) {
+    console.log(resp);
     test.ok(resp);
   })
-  .catch(function (err) {
-    console.log("Err", err);
+  .fail(function (err) {
+    console.log("Error", err);
+    return false;
   })
   .then(function () {
     test.done();
