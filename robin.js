@@ -16,9 +16,9 @@ var RobinApi = require('./lib/api'),
 
 Robin = (function(_super) {
 
-  function Robin (_apiToken) {
+  function Robin (accessToken) {
     Robin.__super__.constructor.call(this);
-    this.api = new RobinApi(_apiToken, config.apiUrl);
+    this.api = new RobinApi(accessToken, config.apiUrl);
   }
 
   util.__extends(Robin, _super);
