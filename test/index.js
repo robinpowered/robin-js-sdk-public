@@ -8,19 +8,21 @@
  *
  */
 
-var Robin = require("../robin"),
-  testConfig = require("./config");
+var Robin, testConfig;
+
+Robin = require("../robin");
+testConfig = require("./config");
 
 // Set up robin classes with tokens of different permission levels
 var robinObjects = {
 
   admin: function () {
-    var robin = new Robin(testConfig.tokens.admin, testConfig.rbnCoreEndpoint);
+    var robin = new Robin(testConfig.tokens.admin);
     return robin;
   },
 
   user: function () {
-    var robin = new Robin(testConfig.tokens.user, testConfig.rbnCoreEndpoint);
+    var robin = new Robin(testConfig.tokens.user);
     return robin;
   }
 

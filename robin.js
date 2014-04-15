@@ -7,17 +7,18 @@
  * https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE
  *
  */
-var Robin;
+var Robin, util, EventEmitter, config;
 
 var RobinApi = require('./lib/api'),
   util = require('./lib/util'),
+  config = require('./config'),
   EventEmitter = require('events').EventEmitter;
 
 Robin = (function(_super) {
 
-  function Robin (_apiToken, _baseUrl) {
+  function Robin (_apiToken) {
     Robin.__super__.constructor.call(this);
-    this.api = new RobinApi(_apiToken, _baseUrl);
+    this.api = new RobinApi(_apiToken, config.apiUrl);
   }
 
   util.__extends(Robin, _super);
