@@ -6,15 +6,15 @@ A JavaScript SDK to communicate with the [Robin][1] platform.
 
 API Routes:
 
-* [ ] Accounts
-* [ ] Apps
-* [ ] Auth
-* [ ] Channels
-* [ ] Device-manifests
-* [ ] Devices
-* [ ] Identifiers
-* [ ] Me
-* [ ] Organizations
-* [ ] Projects
-* [ ] Triggers
-* [ ] Users
+* Accounts
+* Apps
+* Auth
+* [Channels](lib/api/channels.js)
+* Device-manifests
+* Devices
+* Identifiers
+* Me
+* Organizations
+* Projects
+* Triggers
+* Users
