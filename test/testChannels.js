@@ -56,29 +56,3 @@ exports.testAddChannel = function (test) {
     test.done();
   });
 };
-
-exports.testAddChannelFromDeviceFeed = function (test) {
-  test.expect(1);
-
-  var robin, channelData;
-  robin = robinObjects.user();
-  channelData = {
-    device_feed_id: 2,
-    name: 'Test Channel: ' + new Date().toString(),
-    units: 'testing units',
-    type: 1
-  };
-
-  robin.api.channels.add(channelData)
-  .then(function (resp) {
-    test.ok(resp);
-  })
-  .fail(function (err) {
-    console.log("Err", err);
-    console.log(err.stack);
-    return false;
-  })
-  .then(function () {
-    test.done();
-  });
-};
