@@ -13,12 +13,12 @@ API Routes with links to both source and tests:
 | Accounts | | |
 | Apps | | |
 | Auth | | |
-| Channels | [channels.js](lib/api/channels.js) | [testChannels](test/testChannels.js) |
-| DeviceManifests | [devicemanifests.js](lib/api/devicemanifests.js) | [testDeviceManifests](test/testDeviceManifests.js) |
-| Devices | [devices.js](lib/api/devices.js) | [testDevices](test/testDevices.js) |
+| Channels | [channels.js](lib/api/channels.js) | [testChannels.js](test/testChannels.js) |
+| DeviceManifests | [devicemanifests.js](lib/api/devicemanifests.js) | [testDeviceManifests.js](test/testDeviceManifests.js) |
+| Devices | [devices.js](lib/api/devices.js) | [testDevices.js](test/testDevices.js) |
 | Identifiers | | |
-| Me | [me.js](lib/api/me.js) | [testMe](test/testMe.js) |
-| Organizations | [organizations.js](lib/api/organizations.js) | [testOrganizations](test/testOrganizations.js) |
+| Me | [me.js](lib/api/me.js) | [testMe.js](test/testMe.js) |
+| Organizations | [organizations.js](lib/api/organizations.js) | [testOrganizations.js](test/testOrganizations.js) |
 | Projects | | |
 | Triggers | | |
 | Users | [users.js](lib/api/users.js) | |
