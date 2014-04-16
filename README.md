@@ -10,17 +10,17 @@ API Routes with links to both source and tests:
 
 | Route  | Source   | Test Cases  |
 | ------ | -------- | ----------- |
-| Accounts | | |
-| Apps | | |
-| Auth | | |
+| Accounts | [accounts.js](lib/api/accounts.js) | |
+| Apps | [apps.js](lib/api/apps.js) | |
+| Auth | [auth.js](lib/api/auth.js) | |
 | Channels | [channels.js](lib/api/channels.js) | [testChannels.js](test/testChannels.js) |
 | DeviceManifests | [devicemanifests.js](lib/api/devicemanifests.js) | [testDeviceManifests.js](test/testDeviceManifests.js) |
 | Devices | [devices.js](lib/api/devices.js) | [testDevices.js](test/testDevices.js) |
-| Identifiers | | |
+| Identifiers | [identifiers.js](lib/api/identifiers.js) | |
 | Me | [me.js](lib/api/me.js) | [testMe.js](test/testMe.js) |
 | Organizations | [organizations.js](lib/api/organizations.js) | [testOrganizations.js](test/testOrganizations.js) |
-| Projects | | |
-| Triggers | | |
+| Projects | [projects.js](lib/api/projects.js) | |
+| Triggers | [triggers.js](lib/api/triggers.js) | |
 | Users | [users.js](lib/api/users.js) | |
 
 ### Robin Grid
