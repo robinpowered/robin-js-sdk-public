@@ -8,7 +8,7 @@
  *
  */
 
-var robinObjects, channelId;
+var robinObjects;
 
 robinObjects = require("./");
 
