@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="en"><head><title>api/channels</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="api/channels"><meta name="groc-project-path" content="lib/api/channels.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">lib/api/channels.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>robin-js-sdk
+http://getrobin.com/</p>
+
+<p>Copyright (c) 2014 Robin Powered Inc.
+Licensed under the Apache v2 license.
+https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">Channels</span><span class="p">,</span> <span class="nx">q</span><span class="p">,</span> <span class="nx">util</span><span class="p">;</span>
+<span class="nx">util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../util&#39;</span><span class="p">);</span>
+<span class="nx">q</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">);</span>
+
+<span class="nx">Channels</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+  <span class="kd">function</span> <span class="nx">Channels</span> <span class="p">(</span><span class="nx">robin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">util</span><span class="p">.</span><span class="nx">__copyProperties</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">robin</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getAll</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. Channel data must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. A channel id must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="o">&amp;&amp;</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;PATCH&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. Both a channel id and new channel data must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">remove</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. A channel id must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Channel Data</p></div></div><div class="code"><div class="wrapper">  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getAllData</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">channelId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">channelId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">channelId</span> <span class="o">+</span> <span class="s1">&#39;/data/&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. Channel id must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addData</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">channelId</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">channelId</span> <span class="o">&amp;&amp;</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">channelId</span> <span class="o">+</span> <span class="s1">&#39;/data/&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. Channel id and data must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getData</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">channelId</span><span class="p">,</span> <span class="nx">dataId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">channelId</span> <span class="o">&amp;&amp;</span> <span class="nx">dataId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">channelId</span> <span class="o">+</span> <span class="s1">&#39;/data/&#39;</span> <span class="o">+</span> <span class="nx">dataId</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. Channel id and data id must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="nx">Channels</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removeData</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">channelId</span><span class="p">,</span> <span class="nx">dataId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">channelId</span> <span class="o">&amp;&amp;</span> <span class="nx">dataId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/channels/&#39;</span> <span class="o">+</span> <span class="nx">channelId</span> <span class="o">+</span> <span class="s1">&#39;/data/&#39;</span> <span class="o">+</span> <span class="nx">dataId</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s1">&#39;Bad Request. Channel id and data id must be supplied.&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">Channels</span><span class="p">;</span>
+
+<span class="p">})();</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">Channels</span><span class="p">;</span></div></div></div></div></body></html>
