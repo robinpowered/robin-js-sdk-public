@@ -42,7 +42,7 @@ Robin = (function(_super) {
 
   /**
    * Handle any errors that bubble up. Want to intercept them here so we can log them.
-   * @param  {[String|Object]} err An error of some form.
+   * @param  {String|Object} err An error of some form.
    */
   _Robin.prototype.onError = function (err) {
     this.emit('error', err);

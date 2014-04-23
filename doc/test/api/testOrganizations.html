@@ -3,7 +3,7 @@ http://getrobin.com/</p>
 
 <p>Copyright (c) 2014 Robin Powered Inc.
 Licensed under the Apache v2 license.
-https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">robinObjects</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">);</span>
+https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div><div class="code"><div class="wrapper"><span class="kd">var</span> <span class="nx">robinObjects</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">);</span>
 
 <span class="nx">exports</span><span class="p">.</span><span class="nx">testGetUserOrganizations</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">test</span><span class="p">)</span> <span class="p">{</span>
 
@@ -17,7 +17,7 @@ https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div>
     <span class="nx">test</span><span class="p">.</span><span class="nx">ok</span><span class="p">(</span><span class="nx">resp</span><span class="p">);</span>
   <span class="p">})</span>
   <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Err&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Err&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
   <span class="p">})</span>
   <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="nx">test</span><span class="p">.</span><span class="nx">done</span><span class="p">();</span>
