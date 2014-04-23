@@ -339,6 +339,266 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         }
       ]
     }, {
+      "type": "folder",
+      "data": {
+        "path": "grid",
+        "title": "grid"
+      },
+      "depth": 1,
+      "children": [
+        {
+          "type": "file",
+          "data": {
+            "language": {
+              "nameMatchers": [".js"],
+              "pygmentsLexer": "javascript",
+              "multiLineComment": ["/*", "*", "*/"],
+              "singleLineComment": ["//"],
+              "ignorePrefix": "}",
+              "foldPrefix": "^",
+              "name": "JavaScript"
+            },
+            "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/lib/grid/index.js",
+            "projectPath": "lib/grid/index.js",
+            "targetPath": "grid/index",
+            "pageTitle": "grid/index",
+            "title": "index"
+          },
+          "depth": 2,
+          "outline": []
+        }
+      ]
+    }, {
+      "type": "file",
+      "data": {
+        "language": {
+          "nameMatchers": [".js"],
+          "pygmentsLexer": "javascript",
+          "multiLineComment": ["/*", "*", "*/"],
+          "singleLineComment": ["//"],
+          "ignorePrefix": "}",
+          "foldPrefix": "^",
+          "name": "JavaScript"
+        },
+        "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/robin.js",
+        "projectPath": "robin.js",
+        "targetPath": "robin",
+        "pageTitle": "robin",
+        "title": "robin"
+      },
+      "depth": 1,
+      "outline": []
+    }, {
+      "type": "folder",
+      "data": {
+        "path": "test",
+        "title": "test"
+      },
+      "depth": 1,
+      "children": [
+        {
+          "type": "folder",
+          "data": {
+            "path": "test/api",
+            "title": "api"
+          },
+          "depth": 2,
+          "children": [
+            {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/config.js",
+                "projectPath": "test/api/config.js",
+                "targetPath": "test/api/config",
+                "pageTitle": "test/api/config",
+                "title": "config"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/index.js",
+                "projectPath": "test/api/index.js",
+                "targetPath": "test/api/index",
+                "pageTitle": "test/api/index",
+                "title": "index"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/testChannels.js",
+                "projectPath": "test/api/testChannels.js",
+                "targetPath": "test/api/testChannels",
+                "pageTitle": "test/api/testChannels",
+                "title": "testChannels"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/testDeviceManifests.js",
+                "projectPath": "test/api/testDeviceManifests.js",
+                "targetPath": "test/api/testDeviceManifests",
+                "pageTitle": "test/api/testDeviceManifests",
+                "title": "testDeviceManifests"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/testDevices.js",
+                "projectPath": "test/api/testDevices.js",
+                "targetPath": "test/api/testDevices",
+                "pageTitle": "test/api/testDevices",
+                "title": "testDevices"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/testMe.js",
+                "projectPath": "test/api/testMe.js",
+                "targetPath": "test/api/testMe",
+                "pageTitle": "test/api/testMe",
+                "title": "testMe"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/api/testOrganizations.js",
+                "projectPath": "test/api/testOrganizations.js",
+                "targetPath": "test/api/testOrganizations",
+                "pageTitle": "test/api/testOrganizations",
+                "title": "testOrganizations"
+              },
+              "depth": 3,
+              "outline": []
+            }
+          ]
+        }, {
+          "type": "folder",
+          "data": {
+            "path": "test/grid",
+            "title": "grid"
+          },
+          "depth": 2,
+          "children": [
+            {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/grid/config.js",
+                "projectPath": "test/grid/config.js",
+                "targetPath": "test/grid/config",
+                "pageTitle": "test/grid/config",
+                "title": "config"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "sourcePath": "/Users/mark/OMR/robinpowered/robin-js-sdk/test/grid/testConnect.js",
+                "projectPath": "test/grid/testConnect.js",
+                "targetPath": "test/grid/testConnect",
+                "pageTitle": "test/grid/testConnect",
+                "title": "testConnect"
+              },
+              "depth": 3,
+              "outline": []
+            }
+          ]
+        }
+      ]
+    }, {
       "type": "file",
       "data": {
         "language": {

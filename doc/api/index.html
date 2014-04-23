@@ -13,6 +13,7 @@ https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div>
 <span class="nx">RobinApiBase</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 
   <span class="kd">function</span> <span class="nx">_RobinApiBase</span> <span class="p">()</span> <span class="p">{</span>
+
   <span class="p">}</span>
 
   <span class="nx">_RobinApiBase</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setAccessToken</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
@@ -112,20 +113,20 @@ https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div>
 
 <span class="nx">RobinApi</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">_super</span><span class="p">)</span> <span class="p">{</span>
 
-  <span class="kd">function</span> <span class="nx">RobinApi</span> <span class="p">(</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">baseUrl</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">RobinApi</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+  <span class="kd">function</span> <span class="nx">_RobinApi</span> <span class="p">(</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">baseUrl</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">_RobinApi</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">setAccessToken</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">setBaseUrl</span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">loadModules</span><span class="p">();</span>
   <span class="p">}</span>
 
-  <span class="nx">util</span><span class="p">.</span><span class="nx">__extends</span><span class="p">(</span><span class="nx">RobinApi</span><span class="p">,</span> <span class="nx">_super</span><span class="p">);</span>
+  <span class="nx">util</span><span class="p">.</span><span class="nx">__extends</span><span class="p">(</span><span class="nx">_RobinApi</span><span class="p">,</span> <span class="nx">_super</span><span class="p">);</span>
 
-  <span class="nx">RobinApi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">authorize</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">accessToken</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">_RobinApi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">authorize</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">accessToken</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">setAccessToken</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">);</span>
   <span class="p">};</span>
 
-  <span class="nx">RobinApi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">loadModules</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">_RobinApi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">loadModules</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">ApiModule</span><span class="p">,</span> <span class="nx">_robinApiModules</span><span class="p">,</span> <span class="nx">_this</span><span class="p">,</span> <span class="nx">_newModules</span><span class="p">;</span>
     <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
     <span class="nx">_robinApiModules</span> <span class="o">=</span> <span class="nx">getRobinApiModules</span><span class="p">();</span>
@@ -140,7 +141,7 @@ https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div>
     <span class="p">}</span>
   <span class="p">};</span>
 
-  <span class="nx">RobinApi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getCurrentUser</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">_RobinApi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getCurrentUser</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="s1">&#39;/me&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">d</span><span class="p">);</span>
     <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
@@ -162,7 +163,7 @@ https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE</p></div></div>
 
   <span class="p">};</span>
 
-  <span class="k">return</span> <span class="nx">RobinApi</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">_RobinApi</span><span class="p">;</span>
 
 <span class="p">})(</span><span class="nx">RobinApiBase</span><span class="p">);</span>
 

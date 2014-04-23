@@ -7,25 +7,32 @@
  * https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE
  *
  */
-var Robin, util, EventEmitter, config;
 
-var RobinApi = require('./lib/api'),
+var Robin,
+  RobinApi = require('./lib/api'),
   RobinGrid = require('./lib/grid'),
   util = require('./lib/util'),
   config = require('./config'),
   EventEmitter = require('events').EventEmitter;
 
+/**
+ * The Robin SDK provides the interface for interactions with the API
+ * as well as the grid.
+ * @param  {Object} _super The superclass this Robin module inherits from.
+ * In this case, it is an EventEmitter.
+ * @return {Function}      The Robin SDK Object.
+ */
 Robin = (function(_super) {
 
-  function Robin (accessToken) {
-    Robin.__super__.constructor.call(this);
+  function _Robin (accessToken) {
+    _Robin.__super__.constructor.call(this);
     this.api = new RobinApi(accessToken, config.apiUrl);
     this.grid = new RobinGrid(accessToken, config.gridUrl);
   }
 
-  util.__extends(Robin, _super);
+  util.__extends(_Robin, _super);
 
-  return Robin;
+  return _Robin;
 
 })(EventEmitter);
 
