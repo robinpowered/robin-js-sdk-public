@@ -10,7 +10,7 @@
 
 var robinObjects;
 
-robinObjects = require('./');
+robinObjects = require('../');
 
 exports.testGetAllDevices = function (test) {
 

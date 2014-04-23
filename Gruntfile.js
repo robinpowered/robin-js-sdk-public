@@ -41,7 +41,10 @@ module.exports = function(grunt) {
       ]
     },
     nodeunit: {
-      all: ['test/**/test*.js']
+      all: ['test/**/test*.js'],
+      options : {
+        reporter: 'verbose'
+      }
     },
     watch: {
       gruntfile: {

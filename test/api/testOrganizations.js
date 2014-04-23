@@ -8,7 +8,7 @@
  *
  */
 
-var robinObjects = require('./');
+var robinObjects = require('../');
 
 exports.testGetUserOrganizations = function (test) {
 

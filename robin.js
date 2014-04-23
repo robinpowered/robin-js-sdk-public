@@ -28,9 +28,18 @@ Robin = (function(_super) {
     _Robin.__super__.constructor.call(this);
     this.api = new RobinApi(accessToken, config.apiUrl);
     this.grid = new RobinGrid(accessToken, config.gridUrl);
+    this.setupHandlers();
   }
 
   util.__extends(_Robin, _super);
+
+  _Robin.prototype.setupHandlers = function () {
+    this.grid.on('error', util.__bind(this.onError, this));
+  };
+
+  _Robin.prototype.onError = function (err) {
+    this.emit('error', err);
+  };
 
   return _Robin;
 
