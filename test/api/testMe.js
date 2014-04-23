@@ -25,7 +25,7 @@ exports.testGetMe = function (test) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Err", err);
+    console.log('Err', err);
     console.log(err.stack);
     return false;
   })

@@ -8,7 +8,7 @@
  *
  */
 
-var robinObjects = require("./");
+var robinObjects = require('./');
 
 exports.testGetAllDeviceManifests = function (test) {
 
@@ -21,7 +21,7 @@ exports.testGetAllDeviceManifests = function (test) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Error", err);
+    console.log('Error', err);
     return false;
   })
   .then(function () {
