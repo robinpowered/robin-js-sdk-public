@@ -33,10 +33,17 @@ Robin = (function(_super) {
 
   util.__extends(_Robin, _super);
 
+  /**
+   * Setup any event handlers for this SDK.
+   */
   _Robin.prototype.setupHandlers = function () {
     this.grid.on('error', util.__bind(this.onError, this));
   };
 
+  /**
+   * Handle any errors that bubble up. Want to intercept them here so we can log them.
+   * @param  {[String|Object]} err An error of some form.
+   */
   _Robin.prototype.onError = function (err) {
     this.emit('error', err);
   };
