@@ -26,9 +26,14 @@ Robin = (function(_super) {
 
   function _Robin (accessToken) {
     _Robin.__super__.constructor.call(this);
-    this.api = new RobinApi(accessToken, config.apiUrl);
-    this.grid = new RobinGrid(accessToken, config.gridUrl);
-    this.setupHandlers();
+    try {
+      this.api = new RobinApi(accessToken, config.apiUrl);
+      this.grid = new RobinGrid(accessToken, config.gridUrl);
+      this.setupHandlers();
+    } catch (err) {
+      console.log(err);
+      console.log(err.stack);
+    }
   }
 
   util.__extends(_Robin, _super);
