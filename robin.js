@@ -9,11 +9,11 @@
  */
 
 var Robin,
-  RobinApi = require('./lib/api'),
-  RobinGrid = require('./lib/grid'),
-  util = require('./lib/util'),
-  config = require('./config'),
-  EventEmitter = require('events').EventEmitter;
+    RobinApi = require('./lib/api'),
+    RobinGrid = require('./lib/grid'),
+    util = require('./lib/util'),
+    config = require('./config'),
+    EventEmitter = require('events').EventEmitter;
 
 /**
  * The Robin SDK provides the interface for interactions with the API
