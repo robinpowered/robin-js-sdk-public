@@ -6,6 +6,8 @@ This SDK provides the ability to communicate both with the Robin API and the Rob
 
 ### Robin API
 
+The Robin API is a REST based API. Calls to the API return a `promise`.
+
 API Routes with links to both source and tests:
 
 | Route  | Source   | Test Cases  |
@@ -25,5 +27,16 @@ API Routes with links to both source and tests:
 
 ### Robin Grid
 
-The Grid is a websocket server that allows PubSub between clients and devices through configured channels.
+The Grid is a websocket server that allows PubSub between clients and devices through configured channels. The Grid module is an `EventEmitter`, to allow real-time updates.
+
+## Development Roadmap
+
+The following should be implemented:
+
+* Support for use in browsers, as well as node.js
+* Handle scope of access tokens for extended functionality (such as retrieving all API items)
+* Adhere to Robin Javascript Coding Standards
+* Implement API function arguments based on API documentation
+* Expand documentation to include all API modules
+* Can we autogenerate API module functions based on a object template?
 
