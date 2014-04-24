@@ -68,7 +68,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('test', function (file) {
+  grunt.registerTask('unittest', function (file) {
     if (file) {
       var filePath;
       filePath = 'test/test' + file + '.js';
@@ -78,5 +78,6 @@ module.exports = function(grunt) {
     grunt.task.run('nodeunit');
   });
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
+  grunt.registerTask('test', ['jshint', 'nodeunit']);
 
 };

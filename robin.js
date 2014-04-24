@@ -55,6 +55,6 @@ Robin = (function(_super) {
 
   return _Robin;
 
-})(EventEmitter);
+}).apply(this, [EventEmitter]);
 
 module.exports = Robin;
