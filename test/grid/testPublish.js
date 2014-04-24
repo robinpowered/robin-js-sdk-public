@@ -19,7 +19,7 @@ exports.testJoinInvalidChannel = function (test) {
   var robin = robinObjects.user();
 
   robin.on('error', function (err) {
-    test.ok(err, '[ERROR]' + err);
+    test.ok(err, '[ERROR] ' + err);
     test.done();
   });
 
@@ -36,7 +36,7 @@ exports.testJoinValidChannel = function (test) {
   var robin = robinObjects.user();
 
   robin.on('error', function (err) {
-    test.ok(err, '[ERROR]' + err);
+    test.ok(err, '[ERROR] ' + err);
     test.done();
   });
 
@@ -53,7 +53,7 @@ exports.testLeaveUnjoinedChannel = function (test) {
   var robin = robinObjects.user();
 
   robin.on('error', function (err) {
-    test.ok(err, '[ERROR]' + err);
+    test.ok(err, '[ERROR] ' + err);
     test.done();
   });
 
@@ -70,7 +70,7 @@ exports.testJoinChannelThenLeave = function (test) {
   var robin = robinObjects.user();
 
   robin.on('error', function (err) {
-    test.ok(err, '[ERROR]' + err);
+    test.ok(err, '[ERROR] ' + err);
     test.done();
   });
 
