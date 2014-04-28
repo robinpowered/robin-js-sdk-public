@@ -6,6 +6,8 @@
 
 <h3 id="robin-api">Robin API</h3>
 
+<p>The Robin API is a REST based API. Calls to the API return a <code>promise</code>.</p>
+
 <p>API Routes with links to both source and tests:</p>
 
 <table>
@@ -95,4 +97,26 @@
 
 <h3 id="robin-grid">Robin Grid</h3>
 
-<p>The Grid is a websocket server that allows PubSub between clients and devices through configured channels.</p></div></div></div></div></body></html>
+<p>The Grid is a websocket server that allows PubSub between clients and devices through configured channels. The Grid module is an <code>EventEmitter</code>, to allow real-time updates.</p>
+
+<p>The Grid exposes several functions, these are:</p>
+
+<ul>
+<li><code>join</code> - Allows clients to listen to updates from channels</li>
+<li><code>leave</code> - Disconnects the client from receiving updates for a particular channel</li>
+<li><code>send</code> - Allows a client to send messages to a channel.</li>
+</ul>
+
+<h2 id="development-roadmap">Development Roadmap</h2>
+
+<p>The following should be implemented:</p>
+
+<ul>
+<li>Support for use in browsers, as well as node.js</li>
+<li>Add winston for logging - will this work in browsers?</li>
+<li>Handle scope of access tokens for extended functionality (such as retrieving all API items)</li>
+<li>Adhere to Robin Javascript Coding Standards - this is TBD.</li>
+<li>Implement API function arguments based on API documentation</li>
+<li>Expand documentation to include all API modules</li>
+<li>Can we autogenerate API module functions based on a object template?</li>
+</ul></div></div></div></div></body></html>
