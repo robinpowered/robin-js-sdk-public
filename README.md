@@ -4,6 +4,7 @@ A JavaScript SDK to communicate with the [Robin](http://getrobin.com/) platform.
 
 This SDK provides the ability to communicate both with the Robin API and the Robin Grid.
 
+
 ### Robin API
 
 The Robin API is a REST based API. Calls to the API return a `promise`.
@@ -29,13 +30,20 @@ API Routes with links to both source and tests:
 
 The Grid is a websocket server that allows PubSub between clients and devices through configured channels. The Grid module is an `EventEmitter`, to allow real-time updates.
 
+The Grid exposes several functions, these are:
+
+* `join` - Allows clients to listen to updates from channels
+* `leave` - Disconnects the client from receiving updates for a particular channel
+* `send` - Allows a client to send messages to a channel.
+
 ## Development Roadmap
 
 The following should be implemented:
 
 * Support for use in browsers, as well as node.js
+* Add winston for logging - will this work in browsers?
 * Handle scope of access tokens for extended functionality (such as retrieving all API items)
-* Adhere to Robin Javascript Coding Standards
+* Adhere to Robin Javascript Coding Standards - this is TBD.
 * Implement API function arguments based on API documentation
 * Expand documentation to include all API modules
 * Can we autogenerate API module functions based on a object template?
