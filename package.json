@@ -10,6 +10,9 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "scripts": {
+    "test": "grunt test"
+  },
   "licenses": [
     {
       "type": "MIT",
@@ -26,7 +29,7 @@
     "grunt-contrib-uglify": "~0.2.7",
     "grunt-cli": "~0.1.13",
     "jshint-stylish": "~0.1.5",
-    "grunt-contrib-nodeunit": "~0.3.3"
+    "grunt-contrib-nodeunit": "^0.3.3"
   },
   "dependencies": {
     "browserify": "~3.32.1",
@@ -35,6 +38,7 @@
     "q": "~1.0.1",
     "browser-request": "~0.3.1",
     "socket.io": "~0.9.16",
-    "events": "~1.0.0"
+    "events": "~1.0.0",
+    "faye": "^1.0.1"
   }
 }

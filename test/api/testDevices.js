@@ -10,7 +10,7 @@
 
 var robinObjects;
 
-robinObjects = require("./");
+robinObjects = require('../');
 
 exports.testGetAllDevices = function (test) {
 
@@ -30,10 +30,10 @@ exports.testGetAllDevices = function (test) {
   })
   .then(function (prevPageResp) {
     //Only test for equal meta and data properties
-    test.deepEqual([prevPageResp.meta, prevPageResp.data], [firstResp.meta, firstResp.data], "First and last responses don't match");
+    test.deepEqual([prevPageResp.meta, prevPageResp.data], [firstResp.meta, firstResp.data], 'First and last responses don\'t match');
   })
   .fail(function (err) {
-    console.log("Err", err);
+    console.log('Err', err);
     console.log(err.stack);
     return false;
   })
@@ -52,7 +52,7 @@ exports.testGetUserDevices = function (test) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Err", err);
+    console.log('Err', err);
     console.log(err.stack);
     return false;
   })
@@ -70,14 +70,14 @@ exports.testAddUserDevice = function (test) {
   postData = {
     is_relay: false,
     mac: Math.random().toString(),
-    name: "New Generic TestCase Device - " + new Date().toString()
+    name: 'New Generic TestCase Device - ' + new Date().toString()
   };
   robin.api.devices.addUserDevice(postData)
   .then(function (resp) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Error: ", err);
+    console.log('Error: ', err);
     console.log(err.stack);
     return false;
   })

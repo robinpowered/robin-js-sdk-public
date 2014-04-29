@@ -10,10 +10,9 @@
   "newcap": true,
   "noarg": true,
   "regexp": true,
-  "unused": true,
+  "quotmark": "single",
+  "unused": "vars",
+  "undef": true,
   "trailing": true,
-  "smarttabs": true,
-  "globals": {
-    "angular": false
-  }
+  "smarttabs": true
 }

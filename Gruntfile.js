@@ -41,16 +41,9 @@ module.exports = function(grunt) {
       ]
     },
     nodeunit: {
-      all: ['test/**/test*.js']
-    },
-    watch: {
-      gruntfile: {
-        files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
-      },
-      lib_test: {
-        files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'qunit']
+      all: ['test/**/test*.js'],
+      options : {
+        reporter: 'verbose'
       }
     }
   });
@@ -58,14 +51,12 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('test', function (file) {
+  grunt.registerTask('unittest', function (file) {
     if (file) {
       var filePath;
       filePath = 'test/test' + file + '.js';
@@ -75,5 +66,6 @@ module.exports = function(grunt) {
     grunt.task.run('nodeunit');
   });
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
+  grunt.registerTask('test', ['jshint', 'nodeunit']);
 
 };

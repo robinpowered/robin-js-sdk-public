@@ -10,7 +10,7 @@
 
 var robinObjects;
 
-robinObjects = require("./");
+robinObjects = require('../');
 
 exports.testGetAllChannels = function (test) {
 
@@ -23,7 +23,7 @@ exports.testGetAllChannels = function (test) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Err", err);
+    console.log('Err', err);
     console.log(err.stack);
     return false;
   })
@@ -48,7 +48,7 @@ exports.testAddChannel = function (test) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Err", err);
+    console.log('Err', err);
     console.log(err.stack);
     return false;
   })

@@ -8,20 +8,25 @@
  *
  */
 
-var robinObjects = require("./");
+var robinObjects;
 
-exports.testGetAllDeviceManifests = function (test) {
+robinObjects = require('../');
+
+exports.testGetMe = function (test) {
 
   test.expect(1);
 
   var robin;
-  robin = robinObjects.admin();
-  robin.api.devicemanifests.getAll()
+
+  robin = robinObjects.user();
+  // console.log(robin.api);
+  robin.api.me.get()
   .then(function (resp) {
     test.ok(resp);
   })
   .fail(function (err) {
-    console.log("Error", err);
+    console.log('Err', err);
+    console.log(err.stack);
     return false;
   })
   .then(function () {
@@ -29,4 +34,3 @@ exports.testGetAllDeviceManifests = function (test) {
   });
 
 };
-

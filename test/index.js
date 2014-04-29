@@ -10,8 +10,8 @@
 
 var Robin, testConfig;
 
-Robin = require("../robin");
-testConfig = require("./config");
+Robin = require('../robin');
+testConfig = require('./config');
 
 // Set up robin classes with tokens of different permission levels
 var robinObjects = {
