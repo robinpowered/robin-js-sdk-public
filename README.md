@@ -48,3 +48,10 @@ The following should be implemented:
 * Expand documentation to include all API modules
 * Can we autogenerate API module functions based on a object template?
 
+## Browserify
+
+Running `grunt browser` generates two files in the `browser/` folder.
+
+* `browser/robin.browser.js` is the full file after being run through browserify.
+* `browser/robin.browser.min.js` is the minified version.
+
