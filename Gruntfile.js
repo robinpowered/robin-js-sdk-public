@@ -6,12 +6,6 @@ module.exports = function(grunt) {
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
-    // Task configuration.
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -23,12 +17,14 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
-      options: {
-        banner: '<%= banner %>'
-      },
-      dist: {
-        src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+      robin: {
+        options: {
+          drop_console: true,
+          report: 'gzip'
+        },
+        files: {
+          'browser/robin.browser.min.js': ['browser/robin.browser.js']
+        }
       }
     },
     jshint: {
@@ -49,26 +45,26 @@ module.exports = function(grunt) {
     browserify: {
       robin: {
         src: ['robin.js'],
-        dest: 'robin.browser.js',
+        dest: 'browser/robin.browser.js',
         options: {
           browserifyOptions: {
             basedir: '.'
           },
           bundleOptions: {
-            debug: true,
             standalone: 'Robin',
-          },
-          preBundleCB: function (b) {
-            // var remapify = require('remapify');
-            // b.plugin(remapify, [
-            //   {
-            //     src: './lib/config/**/*.js' // glob for the files to remap
-            //     , expose: 'config' // this will expose `__dirname + /client/views/home.js` as `views/home.js`
-            //     , cwd: __dirname // defaults to process.cwd()
-            //   }
-            // ]);
-            console.log(b);
           }
+        }
+      }
+    },
+    compress: {
+      robin: {
+        files: {
+          'browser/robin.browser.min.js.gzip': ['browser/robin.browser.min.js']
+        },
+        options: {
+          mode: 'gzip',
+          level: 9,
+          pretty: true
         }
       }
     }
@@ -79,6 +75,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-browserify');
 
   // Default task.
@@ -94,5 +91,6 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
   grunt.registerTask('test', ['jshint', 'nodeunit']);
+  grunt.registerTask('browser', ['browserify:robin', 'uglify:robin', 'compress:robin']);
 
 };
