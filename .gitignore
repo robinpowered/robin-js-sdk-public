@@ -26,5 +26,4 @@ node_modules
 
 # Ignore test config file
 test/config.js
-
-config/env/development.js
+test.html
