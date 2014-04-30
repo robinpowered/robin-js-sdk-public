@@ -91,6 +91,6 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
   grunt.registerTask('test', ['jshint', 'nodeunit']);
-  grunt.registerTask('browser', ['browserify:robin', 'uglify:robin', 'compress:robin']);
+  grunt.registerTask('browser', ['browserify:robin', 'uglify:robin']);
 
 };

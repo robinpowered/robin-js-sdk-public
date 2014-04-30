@@ -50,5 +50,8 @@ The following should be implemented:
 
 ## Browserify
 
-* `browserify -t brfs ./robin.js --standalone Robin > robin.browser.js`
-* Have to figure out how to include directories, like `config/`
+Running `grunt browser` generates two files in the `browser/` folder.
+
+* `browser/robin.browser.js` is the full file after being run through browserify.
+* `browser/robin.browser.min.js` is the minified version.
+
