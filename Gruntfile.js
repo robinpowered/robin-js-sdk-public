@@ -45,6 +45,32 @@ module.exports = function(grunt) {
       options : {
         reporter: 'verbose'
       }
+    },
+    browserify: {
+      robin: {
+        src: ['robin.js'],
+        dest: 'robin.browser.js',
+        options: {
+          browserifyOptions: {
+            basedir: '.'
+          },
+          bundleOptions: {
+            debug: true,
+            standalone: 'Robin',
+          },
+          preBundleCB: function (b) {
+            // var remapify = require('remapify');
+            // b.plugin(remapify, [
+            //   {
+            //     src: './lib/config/**/*.js' // glob for the files to remap
+            //     , expose: 'config' // this will expose `__dirname + /client/views/home.js` as `views/home.js`
+            //     , cwd: __dirname // defaults to process.cwd()
+            //   }
+            // ]);
+            console.log(b);
+          }
+        }
+      }
     }
   });
 
@@ -53,6 +79,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-browserify');
 
   // Default task.
   grunt.registerTask('lint', ['jshint']);

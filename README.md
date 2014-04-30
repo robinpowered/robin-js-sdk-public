@@ -48,3 +48,7 @@ The following should be implemented:
 * Expand documentation to include all API modules
 * Can we autogenerate API module functions based on a object template?
 
+## Browserify
+
+* `browserify -t brfs ./robin.js --standalone Robin > robin.browser.js`
+* Have to figure out how to include directories, like `config/`
