@@ -9,7 +9,7 @@
  */
 
 var Robin,
-    RobinApi = require('lib/api'),
+    RobinApi = require('./lib/api'),
     RobinGrid = require('./lib/grid'),
     util = require('./lib/util'),
     EventEmitter = require('events').EventEmitter;
@@ -28,7 +28,8 @@ Robin = (function(_super) {
       _Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
           _gridUrl = util.__getRobinUrl('grid', env);
-      this.api = new RobinApi(accessToken, _apiUrl);
+      console.log(_apiUrl, _gridUrl);
+      // this.api = new RobinApi(accessToken, _apiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
     }
