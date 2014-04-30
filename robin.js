@@ -8,18 +8,11 @@
  *
  */
 
-// var fs = require('fs');
-// console.log(fs);
-// fs.readdir(__dirname + '/lib', function (err, files) {
-//   console.log(arguments);
-// });
-
 var Robin,
     RobinApi = require('lib/api'),
     RobinGrid = require('./lib/grid'),
     util = require('./lib/util'),
-    // config = require('./lib/config'),
-    config = require('./lib/config/env/development'),
+    config = require('./lib/config'),
     EventEmitter = require('events').EventEmitter;
 
 /**
@@ -31,11 +24,13 @@ var Robin,
  */
 Robin = (function(_super) {
 
-  function _Robin (accessToken) {
+  function _Robin (accessToken, env, protocol) {
     try {
       _Robin.__super__.constructor.call(this);
-      this.api = new RobinApi(accessToken, config.apiUrl);
-      this.grid = new RobinGrid(accessToken, config.gridUrl);
+      var _apiUrl = config.getUrl('api', env, protocol),
+          _gridUrl = config.getUrl('grid', env, protocol);
+      this.api = new RobinApi(accessToken, _apiUrl);
+      this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
     }
     catch (err) {

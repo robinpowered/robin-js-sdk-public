@@ -17,12 +17,12 @@ testConfig = require('./config');
 var robinObjects = {
 
   admin: function () {
-    var robin = new Robin(testConfig.tokens.admin);
+    var robin = new Robin(testConfig.tokens.admin, 'test');
     return robin;
   },
 
   user: function () {
-    var robin = new Robin(testConfig.tokens.user);
+    var robin = new Robin(testConfig.tokens.user, 'test');
     return robin;
   }
 
