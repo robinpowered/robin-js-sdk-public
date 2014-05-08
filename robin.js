@@ -29,7 +29,7 @@ Robin = (function(_super) {
       var _apiUrl = util.__getRobinUrl('api', env),
           _gridUrl = util.__getRobinUrl('grid', env);
       console.log(_apiUrl, _gridUrl);
-      // this.api = new RobinApi(accessToken, _apiUrl);
+      this.api = new RobinApi(accessToken, _apiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
     }
