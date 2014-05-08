@@ -27,9 +27,10 @@ Robin = (function(_super) {
     try {
       _Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
+          _placesApiUrl = util.__getRobinUrl('apps', env),
           _gridUrl = util.__getRobinUrl('grid', env);
       console.log(_apiUrl, _gridUrl);
-      this.api = new RobinApi(accessToken, _apiUrl);
+      this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
     }
