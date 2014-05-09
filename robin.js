@@ -23,7 +23,7 @@ var Robin,
  */
 Robin = (function(_super) {
 
-  function _Robin (accessToken, env) {
+  function _Robin (accessToken, deviceIdentifier, env) {
     try {
       _Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
@@ -31,7 +31,7 @@ Robin = (function(_super) {
           _gridUrl = util.__getRobinUrl('grid', env);
       console.log(_apiUrl, _gridUrl);
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
-      this.grid = new RobinGrid(accessToken, _gridUrl);
+      this.grid = new RobinGrid(accessToken, deviceIdentifier, _gridUrl);
       this.setupHandlers();
     }
     catch (err) {
