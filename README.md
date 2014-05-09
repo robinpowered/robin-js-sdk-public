@@ -9,7 +9,7 @@ This SDK provides the ability to communicate both with the Robin API and the Rob
 
 The Robin API is a REST based API. Calls to the API return a `promise`.
 
-API Routes with links to both source and tests:
+Core API Routes with links to both source and tests:
 
 | Route  | Source   | Test Cases  |
 | ------ | -------- | ----------- |
@@ -25,6 +25,16 @@ API Routes with links to both source and tests:
 | Projects | [projects.js](lib/api/modules/projects.js) | |
 | Triggers | [triggers.js](lib/api/modules/triggers.js) | |
 | Users | [users.js](lib/api/modules/users.js) | |
+
+Places API Routes with links to both source and tests:
+
+| Route  | Source   | Test Cases  |
+| ------ | -------- | ----------- |
+| Events | [events.js](lib/api/modules/events.js) | |
+| Locations | [locations.js](lib/api/modules/locations.js) | |
+| Personas | [personas.js](lib/api/modules/personas.js) | |
+| Presence | [presence.js](lib/api/modules/presence.js) | |
+| Spaces | [spaces.js](lib/api/modules/spaces.js) | |
 
 ### Robin Grid
 
