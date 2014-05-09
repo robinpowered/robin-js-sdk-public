@@ -21,10 +21,12 @@ Core API Routes with links to both source and tests:
 | Devices | [devices.js](lib/api/modules/devices.js) | [testDevices.js](test/testDevices.js) |
 | Identifiers | [identifiers.js](lib/api/modules/identifiers.js) | |
 | Me | [me.js](lib/api/modules/me.js) | [testMe.js](test/testMe.js) |
-| Organizations | [organizations.js](lib/api/modules/organizations.js) | [testOrganizations.js](test/testOrganizations.js) |
+| <sup>*</sup>Organizations | [organizations.js](lib/api/modules/organizations.js) | [testOrganizations.js](test/testOrganizations.js) |
 | Projects | [projects.js](lib/api/modules/projects.js) | |
 | Triggers | [triggers.js](lib/api/modules/triggers.js) | |
 | Users | [users.js](lib/api/modules/users.js) | |
+
+<sub><sup>*</sup> <em>These modules expose methods that call both the Core and Places API</em></sub>
 
 Places API Routes with links to both source and tests:
 
