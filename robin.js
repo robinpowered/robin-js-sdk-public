@@ -29,7 +29,6 @@ Robin = (function(_super) {
       var _apiUrl = util.__getRobinUrl('api', env),
           _placesApiUrl = util.__getRobinUrl('apps', env),
           _gridUrl = util.__getRobinUrl('grid', env);
-      console.log(_apiUrl, _gridUrl);
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
       this.grid = new RobinGrid(accessToken, deviceIdentifier, _gridUrl);
       this.setupHandlers();
