@@ -8,12 +8,6 @@
  *
  */
 
-var Robin,
-    RobinApi = require('./lib/api'),
-    RobinGrid = require('./lib/grid'),
-    util = require('./lib/util'),
-    EventEmitter = require('events').EventEmitter;
-
 /**
  * The Robin SDK provides the interface for interactions with the API
  * as well as the grid.
@@ -21,16 +15,20 @@ var Robin,
  * In this case, it is an EventEmitter.
  * @return {Function}      The Robin SDK Object.
  */
-Robin = (function(_super) {
+module.exports = (function () {
+  var RobinApi = require('./lib/api'),
+      RobinGrid = require('./lib/grid'),
+      util = require('./lib/util'),
+      EventEmitter = require('events').EventEmitter;
 
-  function _Robin (accessToken, deviceIdentifier, env) {
+  function Robin (accessToken, env) {
     try {
-      _Robin.__super__.constructor.call(this);
+      Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
           _placesApiUrl = util.__getRobinUrl('apps', env),
           _gridUrl = util.__getRobinUrl('grid', env);
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
-      this.grid = new RobinGrid(accessToken, deviceIdentifier, _gridUrl);
+      this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
     }
     catch (err) {
@@ -39,12 +37,12 @@ Robin = (function(_super) {
     }
   }
 
-  util.__extends(_Robin, _super);
+  util.__extends(Robin, EventEmitter);
 
   /**
    * Setup any event handlers for this SDK.
    */
-  _Robin.prototype.setupHandlers = function () {
+  Robin.prototype.setupHandlers = function () {
     this.grid.on('error', util.__bind(this.onError, this));
   };
 
@@ -52,12 +50,15 @@ Robin = (function(_super) {
    * Handle any errors that bubble up. Want to intercept them here so we can log them.
    * @param  {String|Object} err An error of some form.
    */
-  _Robin.prototype.onError = function (err) {
+  Robin.prototype.onError = function (err) {
     this.emit('error', err);
   };
 
-  return _Robin;
+  Robin.prototype.setRelayIdentifier = function(relayIdentifier) {
+    var robinRelayIdentifier = 'urn:relay:' + relayIdentifier;
+    this.api.setRelayIdentifier(robinRelayIdentifier);
+    this.grid.setRelayIdentifier(robinRelayIdentifier);
+  };
 
-}).apply(this, [EventEmitter]);
-
-module.exports = Robin;
+  return Robin;
+}).call(this);
