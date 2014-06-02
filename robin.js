@@ -55,8 +55,9 @@ module.exports = (function () {
   };
 
   Robin.prototype.setRelayIdentifier = function(relayIdentifier) {
-    this.api.setRelayIdentifier(relayIdentifier);
-    this.grid.setRelayIdentifier(relayIdentifier);
+    var robinRelayIdentifier = 'urn:relay:' + relayIdentifier;
+    this.api.setRelayIdentifier(robinRelayIdentifier);
+    this.grid.setRelayIdentifier(robinRelayIdentifier);
   };
 
   return Robin;
