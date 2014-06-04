@@ -38,7 +38,6 @@ _placesApiModules = {
   events: _dereq_('./modules/events'),
   locations: _dereq_('./modules/locations'),
   personas: _dereq_('./modules/personas'),
-  presence: _dereq_('./modules/presence'),
   spaces: _dereq_('./modules/spaces')
 };
 
@@ -94,7 +93,7 @@ RobinApi = (function (_super) {
 
 module.exports = RobinApi;
 
-},{"../util":24,"./base":2,"./modules/accounts":4,"./modules/apps":5,"./modules/auth":6,"./modules/channels":7,"./modules/devicemanifests":8,"./modules/devices":9,"./modules/events":10,"./modules/identifiers":11,"./modules/locations":12,"./modules/me":13,"./modules/organizations":14,"./modules/personas":15,"./modules/presence":16,"./modules/projects":17,"./modules/spaces":18,"./modules/triggers":19,"./modules/users":20,"q":154}],2:[function(_dereq_,module,exports){
+},{"../util":23,"./base":2,"./modules/accounts":4,"./modules/apps":5,"./modules/auth":6,"./modules/channels":7,"./modules/devicemanifests":8,"./modules/devices":9,"./modules/events":10,"./modules/identifiers":11,"./modules/locations":12,"./modules/me":13,"./modules/organizations":14,"./modules/personas":15,"./modules/projects":16,"./modules/spaces":17,"./modules/triggers":18,"./modules/users":19,"q":153}],2:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -127,6 +126,18 @@ RobinApiBase = (function () {
   _RobinApiBase.prototype.getAccessToken = function() {
     if (this._accessToken) {
       return this._accessToken;
+    }
+  };
+
+  _RobinApiBase.prototype.setRelayIdentifier = function(relayIdentifier) {
+    if (relayIdentifier) {
+      this._relayIdentifier = relayIdentifier;
+    }
+  };
+
+  _RobinApiBase.prototype.getRelayIdentifier = function() {
+    if (this._relayIdentifier) {
+      return this._relayIdentifier;
     }
   };
 
@@ -193,16 +204,12 @@ RobinApiBase = (function () {
             var _pageNum;
             _pageNum = pageNum;
             return function () {
-              var _defer;
-              _defer = q.defer();
               queryStringObj = (queryStringObj === undefined || !queryStringObj) ? {}: queryStringObj;
               queryStringObj.page = _pageNum;
               queryStringObj.per_page = pageSize;
-              self.sendRequest(endpoint, method, _defer, json, queryStringObj);
-              return _defer.promise;
+              return self.sendRequest(endpoint, method, json, queryStringObj, usePlacesAPI);
             };
           };
-
           resp.nextPage = pageFunc(nextPage);
           resp.prevPage = pageFunc(prevPage);
         }
@@ -217,7 +224,9 @@ RobinApiBase = (function () {
 
   _RobinApiBase.prototype.buildOptions = function(endpoint, method, json, queryStringObj, usePlacesAPI) {
     var options,
-        baseUrl;
+        baseUrl,
+        accessToken = this.getAccessToken(),
+        relayIdentifier = this.getRelayIdentifier();
 
     if (usePlacesAPI) {
       baseUrl = this.getPlacesBaseUrl();
@@ -228,10 +237,16 @@ RobinApiBase = (function () {
     options = {
       uri: baseUrl + endpoint,
       method: method,
-      headers: {
-        Authorization: 'Access-Token ' + this.getAccessToken()
-      }
+      headers: {}
     };
+
+    if (accessToken) {
+      options.headers.Authorization = 'Access-Token ' + accessToken;
+    }
+
+    if (relayIdentifier) {
+      options.headers['Relay-Identifier'] = relayIdentifier;
+    }
 
     if (json) {
       options.json = json;
@@ -256,7 +271,7 @@ RobinApiBase = (function () {
 
 module.exports = RobinApiBase;
 
-},{"../util":24,"fs":26,"path":141,"q":154,"request":25}],3:[function(_dereq_,module,exports){
+},{"../util":23,"fs":25,"path":140,"q":153,"request":24}],3:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -306,7 +321,7 @@ Accounts = (function () {
 
 module.exports = Accounts;
 
-},{"../../util":24,"q":154}],5:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],5:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -361,7 +376,7 @@ Apps = (function () {
 
 module.exports = Apps;
 
-},{"../../util":24,"q":154}],6:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],6:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -392,7 +407,7 @@ Auth = (function () {
 
 module.exports = Auth;
 
-},{"../../util":24,"q":154}],7:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],7:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -429,7 +444,7 @@ Channels = (function () {
     if (channelId) {
       return this.sendRequest('/channels/' + channelId, 'GET');
     } else {
-      return this.rejectRequest('Bad Request. A channel channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel id must be supplied.');
     }
   };
 
@@ -437,7 +452,7 @@ Channels = (function () {
     if (channelId && data) {
       return this.sendRequest('/channels/' + channelId, 'PATCH', data);
     } else {
-      return this.rejectRequest('Bad Request. Both a channel channelId and new channel data must be supplied.');
+      return this.rejectRequest('Bad Request. Both a Channel id and new channel data must be supplied.');
     }
   };
 
@@ -445,7 +460,7 @@ Channels = (function () {
     if (channelId) {
       return this.sendRequest('/channels/' + channelId, 'DELETE');
     } else {
-      return this.rejectRequest('Bad Request. A channel channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel id must be supplied.');
     }
   };
 
@@ -457,7 +472,7 @@ Channels = (function () {
     if (channelId) {
       return this.sendRequest('/channels/' + channelId + '/data/', 'GET');
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id must be supplied.');
     }
   };
 
@@ -465,7 +480,7 @@ Channels = (function () {
     if (channelId && data) {
       return this.sendRequest('/channels/' + channelId + '/data/', 'POST', data);
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId and data must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id and data must be supplied.');
     }
   };
 
@@ -473,7 +488,7 @@ Channels = (function () {
     if (channelId && dataId) {
       return this.sendRequest('/channels/' + channelId + '/data/' + dataId, 'GET');
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId and data channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id and data id must be supplied.');
     }
   };
 
@@ -481,7 +496,7 @@ Channels = (function () {
     if (channelId && dataId) {
       return this.sendRequest('/channels/' + channelId + '/data/' + dataId, 'DELETE');
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId and data channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id and data id must be supplied.');
     }
   };
 
@@ -493,7 +508,7 @@ Channels = (function () {
     if (channelId) {
       return this.sendRequest('/channels/' + channelId + '/triggers/', 'GET');
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id must be supplied.');
     }
   };
 
@@ -501,7 +516,7 @@ Channels = (function () {
     if (channelId && triggerData) {
       return this.sendRequest('/channels/' + channelId + '/triggers/', 'POST', triggerData);
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId and trigger data must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id and trigger data must be supplied.');
     }
   };
 
@@ -509,7 +524,7 @@ Channels = (function () {
     if (channelId && triggerId) {
       return this.sendRequest('/channels/' + channelId + '/triggers/' + triggerId, 'GET');
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId and trigger channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id and trigger id must be supplied.');
     }
   };
 
@@ -517,7 +532,7 @@ Channels = (function () {
     if (channelId && triggerId) {
       return this.sendRequest('/channels/' + channelId + '/triggers/' + triggerId, 'DELETE');
     } else {
-      return this.rejectRequest('Bad Request. Channel channelId and trigger channelId must be supplied.');
+      return this.rejectRequest('Bad Request. A Channel Id and trigger id must be supplied.');
     }
   };
 
@@ -527,7 +542,7 @@ Channels = (function () {
 
 module.exports = Channels;
 
-},{"../../util":24,"q":154}],8:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],8:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -654,7 +669,7 @@ DeviceManifests = (function () {
 
 module.exports = DeviceManifests;
 
-},{"../../util":24,"q":154}],9:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],9:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -775,13 +790,26 @@ Devices = (function () {
     }
   };
 
+  /*
+   * Spaces
+   */
+
+  Devices.prototype.getAllSpaces = function (deviceId) {
+    var usePlacesApi = true;
+    if (deviceId) {
+      return this.sendRequest('/devices/' + deviceId + '/spaces/', 'GET', null, null, usePlacesApi);
+    } else {
+      return this.rejectRequest('Bad Request. A device id must be supplied.');
+    }
+  };
+
   return Devices;
 
 }).apply(this, arguments);
 
 module.exports = Devices;
 
-},{"../../util":24,"q":154}],10:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],10:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -816,7 +844,7 @@ Events = (function () {
 
 module.exports = Events;
 
-},{"../../util":24,"q":154}],11:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],11:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -863,7 +891,7 @@ Identifiers = (function () {
 
 module.exports = Identifiers;
 
-},{"../../util":24,"q":154}],12:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],12:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -934,7 +962,7 @@ Locations = (function () {
 
 module.exports = Locations;
 
-},{"../../util":24,"q":154}],13:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],13:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1092,7 +1120,7 @@ Me = (function () {
 
 module.exports = Me;
 
-},{"../../util":24,"q":154}],14:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],14:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1363,7 +1391,7 @@ Organizations = (function () {
 
 module.exports = Organizations;
 
-},{"../../util":24,"q":154}],15:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],15:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1458,58 +1486,7 @@ Personas = (function () {
 
 module.exports = Personas;
 
-},{"../../util":24,"q":154}],16:[function(_dereq_,module,exports){
-/*
- * robin-js-sdk
- * http://getrobin.com/
- *
- * Copyright (c) 2014 Robin Powered Inc.
- * Licensed under the Apache v2 license.
- * https://github.com/robinpowered/robin-js-sdk/blob/master/LICENSE
- *
- */
-
-var Presence, q, util;
-util = _dereq_('../../util');
-q = _dereq_('q');
-
-Presence = (function () {
-
-  function Presence (robin) {
-    util.__copyProperties(this, robin);
-  }
-
-  Presence.prototype.getAllUsers = function (spaceId) {
-    if (spaceId) {
-      return this.sendRequest('/spaces/' + spaceId + '/users/', 'GET');
-    } else {
-      return this.rejectRequest('Bad Request. A Space id must be supplied.');
-    }
-  };
-
-  Presence.prototype.getUser = function (spaceId, userId) {
-    if (spaceId && userId) {
-      return this.sendRequest('/spaces/' + spaceId + '/users/' + userId, 'GET');
-    } else {
-      return this.rejectRequest('Bad Request. Both a Space id and user Id must be supplied.');
-    }
-  };
-
-  Presence.prototype.putUser = function (spaceId, userId) {
-    if (spaceId && userId) {
-      return this.sendRequest('/spaces/' + spaceId + '/users/' + userId, 'PUT');
-    } else {
-      return this.rejectRequest('Bad Request. Both a Space id and user Id must be supplied.');
-    }
-  };
-
-  return Presence;
-
-}).apply(this, arguments);
-
-module.exports = Presence;
-
-},{"../../util":24,"q":154}],17:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],16:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1536,7 +1513,7 @@ Projects = (function () {
 
 module.exports = Projects;
 
-},{"../../util":24,"q":154}],18:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],17:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1562,7 +1539,7 @@ Spaces = (function () {
     if (spaceId) {
       return this.sendRequest('/spaces/' + spaceId, 'GET');
     } else {
-      return this.rejectRequest('Bad Request. A Space spaceId must be supplied.');
+      return this.rejectRequest('Bad Request. A Space Id must be supplied.');
     }
   };
 
@@ -1570,7 +1547,7 @@ Spaces = (function () {
     if (spaceId && data) {
       return this.sendRequest('/spaces/' + spaceId, 'PATCH', data);
     } else {
-      return this.rejectRequest('Bad Request. A Space spaceId and space data must be supplied.');
+      return this.rejectRequest('Bad Request. A Space Id and space data must be supplied.');
     }
   };
 
@@ -1578,15 +1555,19 @@ Spaces = (function () {
     if (spaceId) {
       return this.sendRequest('/spaces/' + spaceId, 'DELETE');
     } else {
-      return this.rejectRequest('Bad Request. A Space spaceId must be supplied.');
+      return this.rejectRequest('Bad Request. A Space Id must be supplied.');
     }
   };
 
+  /*
+   * Devices
+   */
+
   Spaces.prototype.getDevices = function (spaceId) {
     if (spaceId) {
-      return this.sendRequest('/spaces/' + spaceId + '/devices', 'GET');
+      return this.sendRequest('/spaces/' + spaceId + '/devices/', 'GET');
     } else {
-      return this.rejectRequest('Bad Request. A Space spaceId must be supplied.');
+      return this.rejectRequest('Bad Request. A Space Id must be supplied.');
     }
   };
 
@@ -1594,7 +1575,7 @@ Spaces = (function () {
     if (spaceId && deviceId) {
       return this.sendRequest('/spaces/' + spaceId + '/devices/' + deviceId, 'GET');
     } else {
-      return this.rejectRequest('Bad Request. Both a Space spaceId and device Id must be supplied.');
+      return this.rejectRequest('Bad Request. Both a Space Id and Device Id must be supplied.');
     }
   };
 
@@ -1602,7 +1583,7 @@ Spaces = (function () {
     if (spaceId && deviceId) {
       return this.sendRequest('/spaces/' + spaceId + '/devices/' + deviceId, 'PUT');
     } else {
-      return this.rejectRequest('Bad Request. Both a Space spaceId and device Id must be supplied.');
+      return this.rejectRequest('Bad Request. Both a Space Id and Device Id must be supplied.');
     }
   };
 
@@ -1610,7 +1591,7 @@ Spaces = (function () {
     if (spaceId && deviceData) {
       return this.sendRequest('/spaces/' + spaceId + '/devices/', 'POST', deviceData);
     } else {
-      return this.rejectRequest('Bad Request. Both a Space spaceId and device data must be supplied.');
+      return this.rejectRequest('Bad Request. Both a Space Id and Device data must be supplied.');
     }
   };
 
@@ -1618,7 +1599,35 @@ Spaces = (function () {
     if (spaceId && deviceId) {
       return this.sendRequest('/spaces/' + spaceId + '/devices/' + deviceId, 'DELETE');
     } else {
-      return this.rejectRequest('Bad Request. Both a Space spaceId and device Id must be supplied.');
+      return this.rejectRequest('Bad Request. Both a Space Id and Device Id must be supplied.');
+    }
+  };
+
+  /*
+   * Presence
+   */
+
+  Spaces.prototype.getAllPresence = function (spaceId) {
+    if (spaceId) {
+      return this.sendRequest('/spaces/' + spaceId + '/presence/', 'GET');
+    } else {
+      return this.rejectRequest('Bad Request. A Space Id must be supplied.');
+    }
+  };
+
+  Spaces.prototype.addPresence = function (spaceId, data) {
+    if (spaceId && data) {
+      return this.sendRequest('/spaces/' + spaceId + '/presence/', 'POST', data);
+    } else {
+      return this.rejectRequest('Bad Request. Both a Space Id and a data object containing a Device Id, a User Id, or both must be supplied.');
+    }
+  };
+
+  Spaces.prototype.removePresence = function (spaceId, data) {
+    if (spaceId && data) {
+      return this.sendRequest('/spaces/' + spaceId + '/presence/', 'DELETE', data);
+    } else {
+      return this.rejectRequest('Bad Request. Both a Space Id and a data object containing a Device Id, a Device Id, or both must be supplied.');
     }
   };
 
@@ -1628,7 +1637,7 @@ Spaces = (function () {
 
 module.exports = Spaces;
 
-},{"../../util":24,"q":154}],19:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],18:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1655,7 +1664,7 @@ Triggers = (function () {
 
 module.exports = Triggers;
 
-},{"../../util":24,"q":154}],20:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],19:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1690,7 +1699,7 @@ Users = (function () {
 
 module.exports = Users;
 
-},{"../../util":24,"q":154}],21:[function(_dereq_,module,exports){
+},{"../../util":23,"q":153}],20:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1731,6 +1740,18 @@ RobinGridBase = (function (_super) {
     }
   };
 
+  _RobinGridBase.prototype.setRelayIdentifier = function(relayIdentifier) {
+    if (relayIdentifier) {
+      this._relayIdentifier = relayIdentifier;
+    }
+  };
+
+  _RobinGridBase.prototype.getRelayIdentifier = function() {
+    if (this._relayIdentifier) {
+      return this._relayIdentifier;
+    }
+  };
+
   _RobinGridBase.prototype.setBaseUrl = function(baseUrl) {
     if (baseUrl) {
       this._baseUrl = baseUrl;
@@ -1739,22 +1760,24 @@ RobinGridBase = (function (_super) {
 
   _RobinGridBase.prototype.setupFayeClient = function (clientCallback) {
     var _grid = this,
-        _accessToken = this._accessToken;
+        outgoingExt;
 
     if (this._baseUrl) {
       this.fayeClient = new faye.Client(this._baseUrl);
       this.fayeClient.on('transport:down', function () {
-        _grid.emit('error', 'Grid transport is down.');
-      });
-      this.fayeClient.addExtension({
-        outgoing: function (message, callback) {
+        this.emit('error', 'Grid transport is down.');
+      }.bind(this));
+      outgoingExt = function (message, callback) {
           // Add ext field if it's not present
-          if (!message.ext) {
-            message.ext = {};
-          }
-          message.ext.accessToken = _accessToken;
-          callback(message);
+        if (!message.ext) {
+          message.ext = {};
         }
+        message.ext.accessToken = this.getAccessToken();
+        message.ext.relayIdentifier = this.getRelayIdentifier();
+        callback(message);
+      }.bind(this);
+      this.fayeClient.addExtension({
+        outgoing: outgoingExt
       });
     }
   };
@@ -1765,7 +1788,7 @@ RobinGridBase = (function (_super) {
 
 module.exports = RobinGridBase;
 
-},{"../util":24,"events":152,"faye":153}],22:[function(_dereq_,module,exports){
+},{"../util":23,"events":151,"faye":152}],21:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1809,7 +1832,10 @@ RobinGrid = (function (_super) {
         _grid = this;
 
     if (channel in this.subscriptions) {
-      console.log('[JOIN::ERROR] You have already joined this channel');
+      err = 'You have already joined this channel';
+      if (callback) {
+        callback(err);
+      }
     } else {
       subscription = this.fayeClient.subscribe(channel, function (message) {
         // TODO: Figure out how we want to emit these
@@ -1818,11 +1844,14 @@ RobinGrid = (function (_super) {
       });
 
       subscription.then(function (resp) {
-        console.log('[JOIN::SUCCESS] ' + JSON.stringify(resp));
         _grid.subscriptions[channel] = subscription;
-        callback();
+        if (callback) {
+          callback(null, resp);
+        }
       }, function (err) {
-        console.log('[JOIN::ERROR] ' + JSON.stringify(err));
+        if (callback) {
+          callback(err);
+        }
         _grid.emit('error', err);
       });
     }
@@ -1835,10 +1864,11 @@ RobinGrid = (function (_super) {
   _RobinGrid.prototype.leave = function (channel, callback) {
     if (channel) {
       if (channel in this.subscriptions) {
-        console.log('[LEAVING] ' + channel);
         this.subscriptions[channel].cancel();
         this.subscriptions[channel] = undefined;
-        callback();
+        if (callback) {
+          callback();
+        }
       } else {
         this.emit('error', 'You have not joined this channel.');
       }
@@ -1850,20 +1880,29 @@ RobinGrid = (function (_super) {
   };
 
   /**
-   * Send a message to a channel
-   * @param  {String} channel A channel identifier
-   * @param  {Object} message An object that contains what you want to send to a channel
+   * Send a message along the grid
+   * @param  {String}   endpoint          A Robin endpoint to send this message to. Can be `'channels'` or `'data'`
+   * @param  {String}   messageIdentifier The identifier of the device from which this message originates.
+   * @param  {String}   messageType       The type of message to send can be `'command'` or `'data'`.
+   * @param  {Object}   messageData       The message payload to send along the grid
+   * @param  {Function} callback          A callback to execute after a message is successfully sent
    */
-  _RobinGrid.prototype.send = function (channel, message, callback) {
-    var published,
+  _RobinGrid.prototype.send = function (endpoint, messageIdentifier, messageType, messageData, callback) {
+    var robinChannel,
+        published,
         _grid = this;
 
-    published = this.fayeClient.publish(channel, message);
+    robinChannel = '/' + endpoint + '/' + messageIdentifier + '/' + messageType;
+    published = this.fayeClient.publish(robinChannel, messageData);
 
     published.then(function (resp) {
-      callback(resp);
+      if (callback) {
+        callback(null, resp);
+      }
     }, function (err) {
-      console.log('[SEND::ERROR] ' + JSON.stringify(err));
+      if (callback) {
+        callback(err);
+      }
       _grid.emit('error', err);
     });
   };
@@ -1874,7 +1913,7 @@ RobinGrid = (function (_super) {
 
 module.exports = RobinGrid;
 
-},{"../util":24,"./base":21}],23:[function(_dereq_,module,exports){
+},{"../util":23,"./base":20}],22:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1889,7 +1928,7 @@ var RobinGrid = _dereq_('./grid');
 
 module.exports = RobinGrid;
 
-},{"./grid":22}],24:[function(_dereq_,module,exports){
+},{"./grid":21}],23:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1991,7 +2030,7 @@ exports.__getRobinUrl = function (robinType, env) {
   return _robinUrl;
 };
 
-},{}],25:[function(_dereq_,module,exports){
+},{}],24:[function(_dereq_,module,exports){
 // Browser Request
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2404,14 +2443,14 @@ function b64_enc (data) {
     return enc;
 }
 
-},{}],26:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 var leveljs = _dereq_('level-js');
 var levelup = _dereq_('levelup');
 var fs = _dereq_('level-filesystem');
 
 var db = levelup('level-filesystem', {db:leveljs});
 module.exports = fs(db);
-},{"level-filesystem":28,"level-js":90,"levelup":106}],27:[function(_dereq_,module,exports){
+},{"level-filesystem":27,"level-js":89,"levelup":105}],26:[function(_dereq_,module,exports){
 var errno = _dereq_('errno');
 
 Object.keys(errno.code).forEach(function(code) {
@@ -2425,7 +2464,7 @@ Object.keys(errno.code).forEach(function(code) {
 		return err;
 	};
 });
-},{"errno":42}],28:[function(_dereq_,module,exports){
+},{"errno":41}],27:[function(_dereq_,module,exports){
 (function (process,Buffer){
 var fwd = _dereq_('fwd-stream');
 var sublevel = _dereq_('level-sublevel');
@@ -3019,7 +3058,7 @@ module.exports = function(db, opts) {
 	return fs;
 };
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),_dereq_("buffer").Buffer)
-},{"./errno":27,"./paths":87,"./watchers":89,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"fwd-stream":44,"level-blobs":57,"level-peek":69,"level-sublevel":72,"once":84}],29:[function(_dereq_,module,exports){
+},{"./errno":26,"./paths":86,"./watchers":88,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"fwd-stream":43,"level-blobs":56,"level-peek":68,"level-sublevel":71,"once":83}],28:[function(_dereq_,module,exports){
 (function (Buffer){
 var Writable = _dereq_('readable-stream').Writable
 var inherits = _dereq_('inherits')
@@ -3156,7 +3195,7 @@ function u8Concat (parts) {
 }
 
 }).call(this,_dereq_("buffer").Buffer)
-},{"buffer":136,"inherits":30,"readable-stream":39,"typedarray":40}],30:[function(_dereq_,module,exports){
+},{"buffer":135,"inherits":29,"readable-stream":38,"typedarray":39}],29:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -3181,7 +3220,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],31:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3274,7 +3313,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./_stream_readable":33,"./_stream_writable":35,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"core-util-is":36,"inherits":30}],32:[function(_dereq_,module,exports){
+},{"./_stream_readable":32,"./_stream_writable":34,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"core-util-is":35,"inherits":29}],31:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3322,7 +3361,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":34,"core-util-is":36,"inherits":30}],33:[function(_dereq_,module,exports){
+},{"./_stream_transform":33,"core-util-is":35,"inherits":29}],32:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4270,7 +4309,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":36,"events":152,"inherits":30,"isarray":37,"stream":143,"string_decoder/":38,"util":135}],34:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":35,"events":151,"inherits":29,"isarray":36,"stream":142,"string_decoder/":37,"util":134}],33:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4481,7 +4520,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":31,"core-util-is":36,"inherits":30}],35:[function(_dereq_,module,exports){
+},{"./_stream_duplex":30,"core-util-is":35,"inherits":29}],34:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4957,7 +4996,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./_stream_duplex":31,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":36,"inherits":30,"stream":143}],36:[function(_dereq_,module,exports){
+},{"./_stream_duplex":30,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":35,"inherits":29,"stream":142}],35:[function(_dereq_,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5067,12 +5106,12 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 }).call(this,_dereq_("buffer").Buffer)
-},{"buffer":136}],37:[function(_dereq_,module,exports){
+},{"buffer":135}],36:[function(_dereq_,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],38:[function(_dereq_,module,exports){
+},{}],37:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5274,7 +5313,7 @@ function base64DetectIncompleteChar(buffer) {
   return incomplete;
 }
 
-},{"buffer":136}],39:[function(_dereq_,module,exports){
+},{"buffer":135}],38:[function(_dereq_,module,exports){
 exports = module.exports = _dereq_('./lib/_stream_readable.js');
 exports.Stream = _dereq_('stream');
 exports.Readable = exports;
@@ -5283,7 +5322,7 @@ exports.Duplex = _dereq_('./lib/_stream_duplex.js');
 exports.Transform = _dereq_('./lib/_stream_transform.js');
 exports.PassThrough = _dereq_('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":31,"./lib/_stream_passthrough.js":32,"./lib/_stream_readable.js":33,"./lib/_stream_transform.js":34,"./lib/_stream_writable.js":35,"stream":143}],40:[function(_dereq_,module,exports){
+},{"./lib/_stream_duplex.js":30,"./lib/_stream_passthrough.js":31,"./lib/_stream_readable.js":32,"./lib/_stream_transform.js":33,"./lib/_stream_writable.js":34,"stream":142}],39:[function(_dereq_,module,exports){
 var undefined = (void 0); // Paranoia
 
 // Beyond this value, index getters/setters (i.e. array[0], array[1]) are so slow to
@@ -5915,7 +5954,7 @@ function packF32(v) { return packIEEE754(v, 8, 23); }
 
 }());
 
-},{}],41:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 var prr = _dereq_('prr')
 
 function init (type, message, cause) {
@@ -5972,7 +6011,7 @@ module.exports = function (errno) {
   }
 }
 
-},{"prr":43}],42:[function(_dereq_,module,exports){
+},{"prr":42}],41:[function(_dereq_,module,exports){
 var all = module.exports.all = [
  {
   "errno": -1,
@@ -6400,7 +6439,7 @@ module.exports.code = {
 
 module.exports.custom = _dereq_("./custom")(module.exports)
 module.exports.create = module.exports.custom.createError
-},{"./custom":41}],43:[function(_dereq_,module,exports){
+},{"./custom":40}],42:[function(_dereq_,module,exports){
 /*!
   * prr
   * (c) 2013 Rod Vagg <rod@vagg.org>
@@ -6464,7 +6503,7 @@ module.exports.create = module.exports.custom.createError
 
   return prr
 })
-},{}],44:[function(_dereq_,module,exports){
+},{}],43:[function(_dereq_,module,exports){
 (function (process,Buffer){
 var Writable = _dereq_('readable-stream/writable');
 var Readable = _dereq_('readable-stream/readable');
@@ -6626,14 +6665,14 @@ exports.duplex = function(opts, initWritable, initReadable) {
 	return dupl;
 };
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),_dereq_("buffer").Buffer)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"readable-stream/duplex":45,"readable-stream/readable":55,"readable-stream/writable":56}],45:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"readable-stream/duplex":44,"readable-stream/readable":54,"readable-stream/writable":55}],44:[function(_dereq_,module,exports){
 module.exports = _dereq_("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":46}],46:[function(_dereq_,module,exports){
+},{"./lib/_stream_duplex.js":45}],45:[function(_dereq_,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"./_stream_readable":47,"./_stream_writable":49,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"core-util-is":50,"inherits":51}],46:[function(_dereq_,module,exports){
 arguments[4][31][0].apply(exports,arguments)
-},{"./_stream_readable":48,"./_stream_writable":50,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"core-util-is":51,"inherits":52}],47:[function(_dereq_,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"./_stream_transform":49,"core-util-is":51,"inherits":52}],48:[function(_dereq_,module,exports){
+},{"./_stream_transform":48,"core-util-is":50,"inherits":51}],47:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -7596,7 +7635,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":51,"events":152,"inherits":52,"isarray":53,"stream":143,"string_decoder/":54}],49:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":50,"events":151,"inherits":51,"isarray":52,"stream":142,"string_decoder/":53}],48:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7808,7 +7847,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":46,"core-util-is":51,"inherits":52}],50:[function(_dereq_,module,exports){
+},{"./_stream_duplex":45,"core-util-is":50,"inherits":51}],49:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8199,15 +8238,15 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./_stream_duplex":46,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":51,"inherits":52,"stream":143}],51:[function(_dereq_,module,exports){
+},{"./_stream_duplex":45,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":50,"inherits":51,"stream":142}],50:[function(_dereq_,module,exports){
+module.exports=_dereq_(35)
+},{"buffer":135}],51:[function(_dereq_,module,exports){
+module.exports=_dereq_(29)
+},{}],52:[function(_dereq_,module,exports){
 module.exports=_dereq_(36)
-},{"buffer":136}],52:[function(_dereq_,module,exports){
-module.exports=_dereq_(30)
 },{}],53:[function(_dereq_,module,exports){
 module.exports=_dereq_(37)
-},{}],54:[function(_dereq_,module,exports){
-module.exports=_dereq_(38)
-},{"buffer":136}],55:[function(_dereq_,module,exports){
+},{"buffer":135}],54:[function(_dereq_,module,exports){
 exports = module.exports = _dereq_('./lib/_stream_readable.js');
 exports.Readable = exports;
 exports.Writable = _dereq_('./lib/_stream_writable.js');
@@ -8215,10 +8254,10 @@ exports.Duplex = _dereq_('./lib/_stream_duplex.js');
 exports.Transform = _dereq_('./lib/_stream_transform.js');
 exports.PassThrough = _dereq_('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":46,"./lib/_stream_passthrough.js":47,"./lib/_stream_readable.js":48,"./lib/_stream_transform.js":49,"./lib/_stream_writable.js":50}],56:[function(_dereq_,module,exports){
+},{"./lib/_stream_duplex.js":45,"./lib/_stream_passthrough.js":46,"./lib/_stream_readable.js":47,"./lib/_stream_transform.js":48,"./lib/_stream_writable.js":49}],55:[function(_dereq_,module,exports){
 module.exports = _dereq_("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":50}],57:[function(_dereq_,module,exports){
+},{"./lib/_stream_writable.js":49}],56:[function(_dereq_,module,exports){
 (function (process,Buffer){
 var Writable = _dereq_('readable-stream/writable');
 var Readable = _dereq_('readable-stream/readable');
@@ -8611,29 +8650,29 @@ module.exports = function(db, opts) {
 	return blobs;
 };
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),_dereq_("buffer").Buffer)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"level-peek":69,"once":84,"readable-stream/readable":67,"readable-stream/writable":68,"util":151}],58:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"level-peek":68,"once":83,"readable-stream/readable":66,"readable-stream/writable":67,"util":150}],57:[function(_dereq_,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"./_stream_readable":59,"./_stream_writable":61,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"core-util-is":62,"inherits":63}],58:[function(_dereq_,module,exports){
 arguments[4][31][0].apply(exports,arguments)
-},{"./_stream_readable":60,"./_stream_writable":62,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"core-util-is":63,"inherits":64}],59:[function(_dereq_,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"./_stream_transform":61,"core-util-is":63,"inherits":64}],60:[function(_dereq_,module,exports){
+},{"./_stream_transform":60,"core-util-is":62,"inherits":63}],59:[function(_dereq_,module,exports){
+module.exports=_dereq_(47)
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":62,"events":151,"inherits":63,"isarray":64,"stream":142,"string_decoder/":65}],60:[function(_dereq_,module,exports){
 module.exports=_dereq_(48)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":63,"events":152,"inherits":64,"isarray":65,"stream":143,"string_decoder/":66}],61:[function(_dereq_,module,exports){
+},{"./_stream_duplex":57,"core-util-is":62,"inherits":63}],61:[function(_dereq_,module,exports){
 module.exports=_dereq_(49)
-},{"./_stream_duplex":58,"core-util-is":63,"inherits":64}],62:[function(_dereq_,module,exports){
-module.exports=_dereq_(50)
-},{"./_stream_duplex":58,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":63,"inherits":64,"stream":143}],63:[function(_dereq_,module,exports){
+},{"./_stream_duplex":57,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":62,"inherits":63,"stream":142}],62:[function(_dereq_,module,exports){
+module.exports=_dereq_(35)
+},{"buffer":135}],63:[function(_dereq_,module,exports){
+module.exports=_dereq_(29)
+},{}],64:[function(_dereq_,module,exports){
 module.exports=_dereq_(36)
-},{"buffer":136}],64:[function(_dereq_,module,exports){
-module.exports=_dereq_(30)
 },{}],65:[function(_dereq_,module,exports){
 module.exports=_dereq_(37)
-},{}],66:[function(_dereq_,module,exports){
-module.exports=_dereq_(38)
-},{"buffer":136}],67:[function(_dereq_,module,exports){
+},{"buffer":135}],66:[function(_dereq_,module,exports){
+module.exports=_dereq_(54)
+},{"./lib/_stream_duplex.js":57,"./lib/_stream_passthrough.js":58,"./lib/_stream_readable.js":59,"./lib/_stream_transform.js":60,"./lib/_stream_writable.js":61}],67:[function(_dereq_,module,exports){
 module.exports=_dereq_(55)
-},{"./lib/_stream_duplex.js":58,"./lib/_stream_passthrough.js":59,"./lib/_stream_readable.js":60,"./lib/_stream_transform.js":61,"./lib/_stream_writable.js":62}],68:[function(_dereq_,module,exports){
-module.exports=_dereq_(56)
-},{"./lib/_stream_writable.js":62}],69:[function(_dereq_,module,exports){
+},{"./lib/_stream_writable.js":61}],68:[function(_dereq_,module,exports){
 var fixRange = _dereq_('level-fix-range')
 //get the first/last record in a range
 
@@ -8710,7 +8749,7 @@ function last (db, opts, cb) {
 }
 
 
-},{"level-fix-range":70}],70:[function(_dereq_,module,exports){
+},{"level-fix-range":69}],69:[function(_dereq_,module,exports){
 
 module.exports = 
 function fixRange(opts) {
@@ -8730,7 +8769,7 @@ function fixRange(opts) {
 }
 
 
-},{}],71:[function(_dereq_,module,exports){
+},{}],70:[function(_dereq_,module,exports){
 function addOperation (type, key, value, options) {
   var operation = {
     type: type,
@@ -8770,7 +8809,7 @@ B.write = function (cb) {
 
 module.exports = Batch
 
-},{}],72:[function(_dereq_,module,exports){
+},{}],71:[function(_dereq_,module,exports){
 (function (process){
 var EventEmitter = _dereq_('events').EventEmitter
 var next         = process.nextTick
@@ -8864,7 +8903,7 @@ module.exports   = function (_db, options) {
 
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./batch":71,"./sub":83,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"events":152,"level-fix-range":73,"level-hooks":75}],73:[function(_dereq_,module,exports){
+},{"./batch":70,"./sub":82,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"events":151,"level-fix-range":72,"level-hooks":74}],72:[function(_dereq_,module,exports){
 var clone = _dereq_('clone')
 
 module.exports = 
@@ -8890,7 +8929,7 @@ function fixRange(opts) {
   return opts
 }
 
-},{"clone":74}],74:[function(_dereq_,module,exports){
+},{"clone":73}],73:[function(_dereq_,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -9007,7 +9046,7 @@ clone.clonePrototype = function(parent) {
 };
 
 }).call(this,_dereq_("buffer").Buffer)
-},{"buffer":136,"util":151}],75:[function(_dereq_,module,exports){
+},{"buffer":135,"util":150}],74:[function(_dereq_,module,exports){
 var ranges = _dereq_('string-range')
 
 module.exports = function (db) {
@@ -9173,7 +9212,7 @@ module.exports = function (db) {
   }
 }
 
-},{"string-range":76}],76:[function(_dereq_,module,exports){
+},{"string-range":75}],75:[function(_dereq_,module,exports){
 
 //force to a valid range
 var range = exports.range = function (obj) {
@@ -9247,7 +9286,7 @@ var satifies = exports.satisfies = function (key, range) {
 
 
 
-},{}],77:[function(_dereq_,module,exports){
+},{}],76:[function(_dereq_,module,exports){
 module.exports = hasKeys
 
 function hasKeys(source) {
@@ -9256,7 +9295,7 @@ function hasKeys(source) {
         typeof source === "function")
 }
 
-},{}],78:[function(_dereq_,module,exports){
+},{}],77:[function(_dereq_,module,exports){
 var Keys = _dereq_("object-keys")
 var hasKeys = _dereq_("./has-keys")
 
@@ -9283,11 +9322,11 @@ function extend() {
     return target
 }
 
-},{"./has-keys":77,"object-keys":79}],79:[function(_dereq_,module,exports){
+},{"./has-keys":76,"object-keys":78}],78:[function(_dereq_,module,exports){
 module.exports = Object.keys || _dereq_('./shim');
 
 
-},{"./shim":82}],80:[function(_dereq_,module,exports){
+},{"./shim":81}],79:[function(_dereq_,module,exports){
 
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
@@ -9311,7 +9350,7 @@ module.exports = function forEach (obj, fn, ctx) {
 };
 
 
-},{}],81:[function(_dereq_,module,exports){
+},{}],80:[function(_dereq_,module,exports){
 
 /**!
  * is
@@ -10015,7 +10054,7 @@ is.string = function (value) {
 };
 
 
-},{}],82:[function(_dereq_,module,exports){
+},{}],81:[function(_dereq_,module,exports){
 (function () {
 	"use strict";
 
@@ -10061,7 +10100,7 @@ is.string = function (value) {
 }());
 
 
-},{"foreach":80,"is":81}],83:[function(_dereq_,module,exports){
+},{"foreach":79,"is":80}],82:[function(_dereq_,module,exports){
 var EventEmitter = _dereq_('events').EventEmitter
 var inherits     = _dereq_('util').inherits
 var ranges       = _dereq_('string-range')
@@ -10340,7 +10379,7 @@ SDB.post = function (range, hook) {
 var exports = module.exports = SubDB
 
 
-},{"./batch":71,"events":152,"level-fix-range":73,"string-range":76,"util":151,"xtend":78}],84:[function(_dereq_,module,exports){
+},{"./batch":70,"events":151,"level-fix-range":72,"string-range":75,"util":150,"xtend":77}],83:[function(_dereq_,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -10362,9 +10401,9 @@ function once (fn) {
   return f
 }
 
+},{}],84:[function(_dereq_,module,exports){
+module.exports=_dereq_(76)
 },{}],85:[function(_dereq_,module,exports){
-module.exports=_dereq_(77)
-},{}],86:[function(_dereq_,module,exports){
 var hasKeys = _dereq_("./has-keys")
 
 module.exports = extend
@@ -10389,7 +10428,7 @@ function extend() {
     return target
 }
 
-},{"./has-keys":85}],87:[function(_dereq_,module,exports){
+},{"./has-keys":84}],86:[function(_dereq_,module,exports){
 (function (process){
 var path = _dereq_('path');
 var once = _dereq_('once');
@@ -10491,7 +10530,7 @@ module.exports = function(db) {
 	return that;
 };
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./errno":27,"./stat":88,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"concat-stream":29,"once":84,"path":141,"xtend":86}],88:[function(_dereq_,module,exports){
+},{"./errno":26,"./stat":87,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"concat-stream":28,"once":83,"path":140,"xtend":85}],87:[function(_dereq_,module,exports){
 var toDate = function(date) {
 	if (!date) return new Date();
 	if (typeof date === 'string') return new Date(date);
@@ -10543,7 +10582,7 @@ Stat.prototype.isSocket = function() {
 module.exports = function(opts) {
 	return new Stat(opts);
 };
-},{}],89:[function(_dereq_,module,exports){
+},{}],88:[function(_dereq_,module,exports){
 var events = _dereq_('events');
 
 module.exports = function() {
@@ -10595,7 +10634,7 @@ module.exports = function() {
 
 	return that;
 };
-},{"events":152}],90:[function(_dereq_,module,exports){
+},{"events":151}],89:[function(_dereq_,module,exports){
 (function (Buffer){
 module.exports = Level
 
@@ -10769,7 +10808,7 @@ var checkKeyValue = Level.prototype._checkKeyValue = function (obj, type) {
 }
 
 }).call(this,_dereq_("buffer").Buffer)
-},{"./iterator":91,"abstract-leveldown":94,"buffer":136,"idb-wrapper":95,"isbuffer":96,"typedarray-to-buffer":97,"util":151,"xtend":99}],91:[function(_dereq_,module,exports){
+},{"./iterator":90,"abstract-leveldown":93,"buffer":135,"idb-wrapper":94,"isbuffer":95,"typedarray-to-buffer":96,"util":150,"xtend":98}],90:[function(_dereq_,module,exports){
 var util = _dereq_('util')
 var AbstractIterator  = _dereq_('abstract-leveldown').AbstractIterator
 module.exports = Iterator
@@ -10877,7 +10916,7 @@ Iterator.prototype._next = function (callback) {
   this.callback = callback
 }
 
-},{"abstract-leveldown":94,"util":151}],92:[function(_dereq_,module,exports){
+},{"abstract-leveldown":93,"util":150}],91:[function(_dereq_,module,exports){
 (function (process){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -10961,7 +11000,7 @@ AbstractChainedBatch.prototype.write = function (options, callback) {
 
 module.exports = AbstractChainedBatch
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],93:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],92:[function(_dereq_,module,exports){
 (function (process){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -11014,7 +11053,7 @@ AbstractIterator.prototype.end = function (callback) {
 module.exports = AbstractIterator
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],94:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],93:[function(_dereq_,module,exports){
 (function (process,Buffer){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -11276,7 +11315,7 @@ module.exports.AbstractIterator     = AbstractIterator
 module.exports.AbstractChainedBatch = AbstractChainedBatch
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),_dereq_("buffer").Buffer)
-},{"./abstract-chained-batch":92,"./abstract-iterator":93,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"xtend":99}],95:[function(_dereq_,module,exports){
+},{"./abstract-chained-batch":91,"./abstract-iterator":92,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"xtend":98}],94:[function(_dereq_,module,exports){
 /*global window:false, self:false, define:false, module:false */
 
 /**
@@ -12496,7 +12535,7 @@ module.exports.AbstractChainedBatch = AbstractChainedBatch
 
 }, this);
 
-},{}],96:[function(_dereq_,module,exports){
+},{}],95:[function(_dereq_,module,exports){
 var Buffer = _dereq_('buffer').Buffer;
 
 module.exports = isBuffer;
@@ -12506,7 +12545,7 @@ function isBuffer (o) {
     || /\[object (.+Array|Array.+)\]/.test(Object.prototype.toString.call(o));
 }
 
-},{"buffer":136}],97:[function(_dereq_,module,exports){
+},{"buffer":135}],96:[function(_dereq_,module,exports){
 (function (Buffer){
 /**
  * Convert a typed array to a Buffer without a copy
@@ -12528,11 +12567,11 @@ module.exports = function (arr) {
   }
 }
 }).call(this,_dereq_("buffer").Buffer)
-},{"buffer":136}],98:[function(_dereq_,module,exports){
-module.exports=_dereq_(77)
-},{}],99:[function(_dereq_,module,exports){
-arguments[4][78][0].apply(exports,arguments)
-},{"./has-keys":98,"object-keys":101}],100:[function(_dereq_,module,exports){
+},{"buffer":135}],97:[function(_dereq_,module,exports){
+module.exports=_dereq_(76)
+},{}],98:[function(_dereq_,module,exports){
+arguments[4][77][0].apply(exports,arguments)
+},{"./has-keys":97,"object-keys":100}],99:[function(_dereq_,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -12574,9 +12613,9 @@ module.exports = function forEach(obj, fn) {
 };
 
 
-},{}],101:[function(_dereq_,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"./shim":103}],102:[function(_dereq_,module,exports){
+},{}],100:[function(_dereq_,module,exports){
+arguments[4][78][0].apply(exports,arguments)
+},{"./shim":102}],101:[function(_dereq_,module,exports){
 var toString = Object.prototype.toString;
 
 module.exports = function isArguments(value) {
@@ -12594,7 +12633,7 @@ module.exports = function isArguments(value) {
 };
 
 
-},{}],103:[function(_dereq_,module,exports){
+},{}],102:[function(_dereq_,module,exports){
 (function () {
 	"use strict";
 
@@ -12658,7 +12697,7 @@ module.exports = function isArguments(value) {
 }());
 
 
-},{"./foreach":100,"./isArguments":102}],104:[function(_dereq_,module,exports){
+},{"./foreach":99,"./isArguments":101}],103:[function(_dereq_,module,exports){
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
  * MIT +no-false-attribs License
@@ -12738,7 +12777,7 @@ Batch.prototype.write = function (callback) {
 
 module.exports = Batch
 
-},{"./errors":105,"./util":108}],105:[function(_dereq_,module,exports){
+},{"./errors":104,"./util":107}],104:[function(_dereq_,module,exports){
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
  * MIT +no-false-attribs License
@@ -12761,7 +12800,7 @@ module.exports = {
   , NotFoundError       : NotFoundError
   , EncodingError       : createError('EncodingError', LevelUPError)
 }
-},{"errno":116}],106:[function(_dereq_,module,exports){
+},{"errno":115}],105:[function(_dereq_,module,exports){
 (function (process){
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
@@ -13200,7 +13239,7 @@ module.exports.destroy = utilStatic('destroy')
 module.exports.repair  = utilStatic('repair')
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./batch":104,"./errors":105,"./read-stream":107,"./util":108,"./write-stream":109,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"deferred-leveldown":111,"events":152,"prr":117,"util":151,"xtend":129}],107:[function(_dereq_,module,exports){
+},{"./batch":103,"./errors":104,"./read-stream":106,"./util":107,"./write-stream":108,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"deferred-leveldown":110,"events":151,"prr":116,"util":150,"xtend":128}],106:[function(_dereq_,module,exports){
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
@@ -13322,7 +13361,7 @@ ReadStream.prototype.toString = function () {
 
 module.exports = ReadStream
 
-},{"./errors":105,"./util":108,"readable-stream":127,"util":151,"xtend":129}],108:[function(_dereq_,module,exports){
+},{"./errors":104,"./util":107,"readable-stream":126,"util":150,"xtend":128}],107:[function(_dereq_,module,exports){
 (function (process,Buffer){
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
@@ -13508,7 +13547,7 @@ module.exports = {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),_dereq_("buffer").Buffer)
-},{"../package.json":134,"./errors":105,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"leveldown":135,"leveldown/package":135,"semver":135,"xtend":129}],109:[function(_dereq_,module,exports){
+},{"../package.json":133,"./errors":104,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"leveldown":134,"leveldown/package":134,"semver":134,"xtend":128}],108:[function(_dereq_,module,exports){
 (function (process,global){
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
@@ -13690,7 +13729,7 @@ WriteStream.prototype.toString = function () {
 module.exports = WriteStream
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./util":108,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"concat-stream":110,"stream":143,"util":151,"xtend":129}],110:[function(_dereq_,module,exports){
+},{"./util":107,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"concat-stream":109,"stream":142,"util":150,"xtend":128}],109:[function(_dereq_,module,exports){
 (function (Buffer){
 var stream = _dereq_('stream')
 var util = _dereq_('util')
@@ -13744,7 +13783,7 @@ module.exports = function(cb) {
 module.exports.ConcatStream = ConcatStream
 
 }).call(this,_dereq_("buffer").Buffer)
-},{"buffer":136,"stream":143,"util":151}],111:[function(_dereq_,module,exports){
+},{"buffer":135,"stream":142,"util":150}],110:[function(_dereq_,module,exports){
 (function (process,Buffer){
 var util              = _dereq_('util')
   , AbstractLevelDOWN = _dereq_('abstract-leveldown').AbstractLevelDOWN
@@ -13795,51 +13834,51 @@ DeferredLevelDOWN.prototype._iterator = function () {
 module.exports = DeferredLevelDOWN
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),_dereq_("buffer").Buffer)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"abstract-leveldown":114,"buffer":136,"util":151}],112:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"abstract-leveldown":113,"buffer":135,"util":150}],111:[function(_dereq_,module,exports){
+module.exports=_dereq_(91)
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],112:[function(_dereq_,module,exports){
 module.exports=_dereq_(92)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],113:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],113:[function(_dereq_,module,exports){
 module.exports=_dereq_(93)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],114:[function(_dereq_,module,exports){
-module.exports=_dereq_(94)
-},{"./abstract-chained-batch":112,"./abstract-iterator":113,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"xtend":129}],115:[function(_dereq_,module,exports){
+},{"./abstract-chained-batch":111,"./abstract-iterator":112,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"xtend":128}],114:[function(_dereq_,module,exports){
+module.exports=_dereq_(40)
+},{"prr":116}],115:[function(_dereq_,module,exports){
 module.exports=_dereq_(41)
-},{"prr":117}],116:[function(_dereq_,module,exports){
+},{"./custom":114}],116:[function(_dereq_,module,exports){
 module.exports=_dereq_(42)
-},{"./custom":115}],117:[function(_dereq_,module,exports){
-module.exports=_dereq_(43)
-},{}],118:[function(_dereq_,module,exports){
+},{}],117:[function(_dereq_,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"./_stream_readable":119,"./_stream_writable":121,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"core-util-is":122,"inherits":123}],118:[function(_dereq_,module,exports){
 arguments[4][31][0].apply(exports,arguments)
-},{"./_stream_readable":120,"./_stream_writable":122,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"core-util-is":123,"inherits":124}],119:[function(_dereq_,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"./_stream_transform":121,"core-util-is":123,"inherits":124}],120:[function(_dereq_,module,exports){
+},{"./_stream_transform":120,"core-util-is":122,"inherits":123}],119:[function(_dereq_,module,exports){
+module.exports=_dereq_(47)
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":122,"events":151,"inherits":123,"isarray":124,"stream":142,"string_decoder/":125}],120:[function(_dereq_,module,exports){
 module.exports=_dereq_(48)
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":123,"events":152,"inherits":124,"isarray":125,"stream":143,"string_decoder/":126}],121:[function(_dereq_,module,exports){
+},{"./_stream_duplex":117,"core-util-is":122,"inherits":123}],121:[function(_dereq_,module,exports){
 module.exports=_dereq_(49)
-},{"./_stream_duplex":118,"core-util-is":123,"inherits":124}],122:[function(_dereq_,module,exports){
-module.exports=_dereq_(50)
-},{"./_stream_duplex":118,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"core-util-is":123,"inherits":124,"stream":143}],123:[function(_dereq_,module,exports){
+},{"./_stream_duplex":117,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"core-util-is":122,"inherits":123,"stream":142}],122:[function(_dereq_,module,exports){
+module.exports=_dereq_(35)
+},{"buffer":135}],123:[function(_dereq_,module,exports){
+module.exports=_dereq_(29)
+},{}],124:[function(_dereq_,module,exports){
 module.exports=_dereq_(36)
-},{"buffer":136}],124:[function(_dereq_,module,exports){
-module.exports=_dereq_(30)
 },{}],125:[function(_dereq_,module,exports){
 module.exports=_dereq_(37)
-},{}],126:[function(_dereq_,module,exports){
-module.exports=_dereq_(38)
-},{"buffer":136}],127:[function(_dereq_,module,exports){
-module.exports=_dereq_(55)
-},{"./lib/_stream_duplex.js":118,"./lib/_stream_passthrough.js":119,"./lib/_stream_readable.js":120,"./lib/_stream_transform.js":121,"./lib/_stream_writable.js":122}],128:[function(_dereq_,module,exports){
-module.exports=_dereq_(77)
-},{}],129:[function(_dereq_,module,exports){
+},{"buffer":135}],126:[function(_dereq_,module,exports){
+module.exports=_dereq_(54)
+},{"./lib/_stream_duplex.js":117,"./lib/_stream_passthrough.js":118,"./lib/_stream_readable.js":119,"./lib/_stream_transform.js":120,"./lib/_stream_writable.js":121}],127:[function(_dereq_,module,exports){
+module.exports=_dereq_(76)
+},{}],128:[function(_dereq_,module,exports){
+arguments[4][77][0].apply(exports,arguments)
+},{"./has-keys":127,"object-keys":130}],129:[function(_dereq_,module,exports){
+module.exports=_dereq_(99)
+},{}],130:[function(_dereq_,module,exports){
 arguments[4][78][0].apply(exports,arguments)
-},{"./has-keys":128,"object-keys":131}],130:[function(_dereq_,module,exports){
-module.exports=_dereq_(100)
-},{}],131:[function(_dereq_,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"./shim":133}],132:[function(_dereq_,module,exports){
+},{"./shim":132}],131:[function(_dereq_,module,exports){
+module.exports=_dereq_(101)
+},{}],132:[function(_dereq_,module,exports){
 module.exports=_dereq_(102)
-},{}],133:[function(_dereq_,module,exports){
-module.exports=_dereq_(103)
-},{"./foreach":130,"./isArguments":132}],134:[function(_dereq_,module,exports){
+},{"./foreach":129,"./isArguments":131}],133:[function(_dereq_,module,exports){
 module.exports={
   "name": "levelup",
   "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
@@ -13977,9 +14016,9 @@ module.exports={
   "_resolved": "https://registry.npmjs.org/levelup/-/levelup-0.18.3.tgz"
 }
 
-},{}],135:[function(_dereq_,module,exports){
+},{}],134:[function(_dereq_,module,exports){
 
-},{}],136:[function(_dereq_,module,exports){
+},{}],135:[function(_dereq_,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -15090,7 +15129,7 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-},{"base64-js":137,"ieee754":138}],137:[function(_dereq_,module,exports){
+},{"base64-js":136,"ieee754":137}],136:[function(_dereq_,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -15213,7 +15252,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	module.exports.fromByteArray = uint8ToBase64
 }())
 
-},{}],138:[function(_dereq_,module,exports){
+},{}],137:[function(_dereq_,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -15299,9 +15338,9 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
+},{}],138:[function(_dereq_,module,exports){
+module.exports=_dereq_(29)
 },{}],139:[function(_dereq_,module,exports){
-module.exports=_dereq_(30)
-},{}],140:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -15363,7 +15402,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],141:[function(_dereq_,module,exports){
+},{}],140:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -15591,7 +15630,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],142:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],141:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15665,7 +15704,7 @@ function onend() {
   });
 }
 
-},{"./readable.js":146,"./writable.js":148,"inherits":139,"process/browser.js":144}],143:[function(_dereq_,module,exports){
+},{"./readable.js":145,"./writable.js":147,"inherits":138,"process/browser.js":143}],142:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15794,7 +15833,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"./duplex.js":142,"./passthrough.js":145,"./readable.js":146,"./transform.js":147,"./writable.js":148,"events":152,"inherits":139}],144:[function(_dereq_,module,exports){
+},{"./duplex.js":141,"./passthrough.js":144,"./readable.js":145,"./transform.js":146,"./writable.js":147,"events":151,"inherits":138}],143:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -15849,7 +15888,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],145:[function(_dereq_,module,exports){
+},{}],144:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15892,7 +15931,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./transform.js":147,"inherits":139}],146:[function(_dereq_,module,exports){
+},{"./transform.js":146,"inherits":138}],145:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -16829,7 +16868,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./index.js":143,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"buffer":136,"events":152,"inherits":139,"process/browser.js":144,"string_decoder":149}],147:[function(_dereq_,module,exports){
+},{"./index.js":142,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"buffer":135,"events":151,"inherits":138,"process/browser.js":143,"string_decoder":148}],146:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17035,7 +17074,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./duplex.js":142,"inherits":139}],148:[function(_dereq_,module,exports){
+},{"./duplex.js":141,"inherits":138}],147:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17423,7 +17462,7 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./index.js":143,"buffer":136,"inherits":139,"process/browser.js":144}],149:[function(_dereq_,module,exports){
+},{"./index.js":142,"buffer":135,"inherits":138,"process/browser.js":143}],148:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17616,14 +17655,14 @@ function base64DetectIncompleteChar(buffer) {
   return incomplete;
 }
 
-},{"buffer":136}],150:[function(_dereq_,module,exports){
+},{"buffer":135}],149:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],151:[function(_dereq_,module,exports){
+},{}],150:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -18213,7 +18252,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":150,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140,"inherits":139}],152:[function(_dereq_,module,exports){
+},{"./support/isBuffer":149,"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139,"inherits":138}],151:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -18515,7 +18554,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],153:[function(_dereq_,module,exports){
+},{}],152:[function(_dereq_,module,exports){
 (function (process,global){
 (function() {
 'use strict';
@@ -21059,7 +21098,7 @@ Faye.Transport.register('callback-polling', Faye.Transport.JSONP);
 
 })();
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],154:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],153:[function(_dereq_,module,exports){
 (function (process){
 // vim:ts=4:sts=4:sw=4:
 /*!
@@ -22967,7 +23006,7 @@ return Q;
 });
 
 }).call(this,_dereq_("/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":140}],155:[function(_dereq_,module,exports){
+},{"/Users/mark/OMR/robinpowered/robin-js-sdk/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":139}],154:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -22978,12 +23017,6 @@ return Q;
  *
  */
 
-var Robin,
-    RobinApi = _dereq_('./lib/api'),
-    RobinGrid = _dereq_('./lib/grid'),
-    util = _dereq_('./lib/util'),
-    EventEmitter = _dereq_('events').EventEmitter;
-
 /**
  * The Robin SDK provides the interface for interactions with the API
  * as well as the grid.
@@ -22991,15 +23024,18 @@ var Robin,
  * In this case, it is an EventEmitter.
  * @return {Function}      The Robin SDK Object.
  */
-Robin = (function(_super) {
+module.exports = (function () {
+  var RobinApi = _dereq_('./lib/api'),
+      RobinGrid = _dereq_('./lib/grid'),
+      util = _dereq_('./lib/util'),
+      EventEmitter = _dereq_('events').EventEmitter;
 
-  function _Robin (accessToken, env) {
+  function Robin (accessToken, env) {
     try {
-      _Robin.__super__.constructor.call(this);
+      Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
           _placesApiUrl = util.__getRobinUrl('apps', env),
           _gridUrl = util.__getRobinUrl('grid', env);
-      console.log(_apiUrl, _gridUrl);
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
@@ -23010,12 +23046,12 @@ Robin = (function(_super) {
     }
   }
 
-  util.__extends(_Robin, _super);
+  util.__extends(Robin, EventEmitter);
 
   /**
    * Setup any event handlers for this SDK.
    */
-  _Robin.prototype.setupHandlers = function () {
+  Robin.prototype.setupHandlers = function () {
     this.grid.on('error', util.__bind(this.onError, this));
   };
 
@@ -23023,16 +23059,18 @@ Robin = (function(_super) {
    * Handle any errors that bubble up. Want to intercept them here so we can log them.
    * @param  {String|Object} err An error of some form.
    */
-  _Robin.prototype.onError = function (err) {
+  Robin.prototype.onError = function (err) {
     this.emit('error', err);
   };
 
-  return _Robin;
+  Robin.prototype.setRelayIdentifier = function(relayIdentifier) {
+    this.api.setRelayIdentifier(relayIdentifier);
+    this.grid.setRelayIdentifier(relayIdentifier);
+  };
 
-}).apply(this, [EventEmitter]);
+  return Robin;
+}).call(this);
 
-module.exports = Robin;
-
-},{"./lib/api":3,"./lib/grid":23,"./lib/util":24,"events":152}]},{},[155])
-(155)
+},{"./lib/api":3,"./lib/grid":22,"./lib/util":23,"events":151}]},{},[154])
+(154)
 });
