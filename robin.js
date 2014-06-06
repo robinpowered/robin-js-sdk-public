@@ -26,7 +26,7 @@ module.exports = (function () {
       Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
           _placesApiUrl = util.__getRobinUrl('apps', env),
-          _gridUrl = util.__getRobinUrl('grid', env);
+          _gridUrl = util.__getRobinUrl('grid', env, 'http://');
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
