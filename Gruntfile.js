@@ -71,6 +71,15 @@ module.exports = function(grunt) {
           pretty: true
         }
       }
+    },
+    jscs: {
+      lib: {
+        src: ['lib/**/*.js'],
+        options: {
+          config: '.jscs.json',
+          reporter: 'console'
+        }
+      }
     }
   });
 
@@ -81,9 +90,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-jscs-checker');
 
   // Default task.
   grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('style', ['jscs:lib']);
   grunt.registerTask('unittest', function (file) {
     if (file) {
       var filePath;

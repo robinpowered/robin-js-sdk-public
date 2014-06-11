@@ -35,6 +35,7 @@
     "grunt-browserify": "^2.0.8",
     "remapify": "^0.1.6",
     "grunt-contrib-compress": "^0.8.0",
+    "grunt-jscs-checker": "^0.4.4",
     "time-grunt": "^0.3.2"
   },
   "dependencies": {
