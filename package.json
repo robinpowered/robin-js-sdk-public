@@ -33,9 +33,9 @@
     "browserify": "^3.44.2",
     "brfs": "^1.1.1",
     "grunt-browserify": "^2.0.8",
-    "browserify-fs": "^1.0.0",
     "remapify": "^0.1.6",
-    "grunt-contrib-compress": "^0.8.0"
+    "grunt-contrib-compress": "^0.8.0",
+    "time-grunt": "^0.3.2"
   },
   "dependencies": {
     "request": "~2.34.0",
@@ -45,7 +45,7 @@
     "faye": "^1.0.1"
   },
   "browser": {
-    "fs": "browserify-fs",
+    "fs": "brfs",
     "request": "browser-request"
   }
 }
