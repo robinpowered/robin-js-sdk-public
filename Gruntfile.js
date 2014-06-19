@@ -1,7 +1,11 @@
 'use strict';
 /*global module:false*/
+
 module.exports = function(grunt) {
 
+  // The `time-grunt` module provides a handy output of the run time of each
+  // grunt task
+  require('time-grunt')(grunt);
   // Project configuration.
   grunt.initConfig({
     // Metadata.
