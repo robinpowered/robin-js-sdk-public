@@ -9,6 +9,8 @@
  */
 
 var Robin = require('../robin'),
+    Api = require('../lib/api'),
+    Grid = require('../lib/grid'),
     chai = require('chai'),
     assert = chai.assert,
     expect = chai.expect,
