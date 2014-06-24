@@ -22,6 +22,9 @@ module.exports = (function () {
       EventEmitter = require('events').EventEmitter;
 
   function Robin (accessToken, env) {
+    if (!accessToken) {
+      throw new TypeError('A Robin Access Token must be supplied');
+    }
     try {
       Robin.__super__.constructor.call(this);
       var _apiUrl = util.__getRobinUrl('api', env),
@@ -32,8 +35,7 @@ module.exports = (function () {
       this.setupHandlers();
     }
     catch (err) {
-      console.log(err);
-      console.log(err.stack);
+      throw err;
     }
   }
 
