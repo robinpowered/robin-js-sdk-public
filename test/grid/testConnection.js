@@ -80,7 +80,7 @@ describe('grid - connection', function () {
           connection = grid.device.connect(15);
           deferred = q.defer();
           deferred.reject('error');
-          resolvedStub = sinon.stub(connection.gridClient, "subscribe").returns(deferred.promise);
+          resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(deferred.promise);
           connection.gridClient.subscribe = resolvedStub;
         });
         it('should receive an error', function (done) {
@@ -101,7 +101,7 @@ describe('grid - connection', function () {
           connection = grid.device.connect(15);
           deferred = q.defer();
           deferred.resolve('Resolved Message');
-          resolvedStub = sinon.stub(connection.gridClient, "subscribe").returns(deferred.promise);
+          resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(deferred.promise);
           connection.gridClient.subscribe = resolvedStub;
         });
         it('should set up a listener', function (done) {
@@ -152,12 +152,12 @@ describe('grid - connection', function () {
           var connection;
           before(function () {
             connection = grid.device.connect(15);
-            resolvedStub = sinon.stub(connection.gridClient, "subscribe").returns(subscriptionObj.promise);
+            resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(subscriptionObj.promise);
             connection.gridClient.subscribe = resolvedStub;
           });
           it('should pass an error message', function (done) {
             connection.stop(function (err) {
-              expect(err).to.not.be.undefined;
+              expect(err).to.not.be.null;
               done();
             });
           });
@@ -169,19 +169,65 @@ describe('grid - connection', function () {
           var connection;
           before(function () {
             connection = grid.device.connect(15);
-            resolvedStub = sinon.stub(connection.gridClient, "subscribe").returns(subscriptionObj.promise);
+            resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(subscriptionObj.promise);
             connection.gridClient.subscribe = resolvedStub;
             connection.listen();
           });
           it('should stop listening without a message', function (done) {
             connection.stop(function (err) {
-              expect(err).to.be.undefined;
+              expect(err).to.be.null;
               done();
             });
           });
           after(function () {
             connection.gridClient.subscribe.restore();
           });
+        });
+      });
+    });
+    describe('send messages to connection', function () {
+      describe('send error', function () {
+        var connection,
+            publishObj = q.defer(),
+            message = {
+              foo: 'bar'
+            };
+        before(function () {
+          connection = grid.device.connect(15);
+          publishObj.reject('Can\'t send this message now');
+          resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(publishObj.promise);
+          connection.gridClient.publish = resolvedStub;
+        });
+        it('should callback with an error', function (done) {
+          connection.send('data', message, function (err, resp) {
+            expect(err).to.not.be.null;
+            done();
+          });
+        });
+        after(function () {
+          connection.gridClient.publish.restore();
+        });
+      });
+      describe('send success', function () {
+        var connection,
+            publishObj = q.defer(),
+            message = {
+              foo: 'bar'
+            };
+        before(function () {
+          connection = grid.device.connect(15);
+          publishObj.resolve('Message Sent Successfully');
+          resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(publishObj.promise);
+          connection.gridClient.publish = resolvedStub;
+        });
+        it('should callback with an error', function (done) {
+          connection.send('data', message, function (err, resp) {
+            expect(err).to.be.null;
+            done();
+          });
+        });
+        after(function () {
+          connection.gridClient.publish.restore();
         });
       });
     });
