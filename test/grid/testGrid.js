@@ -16,20 +16,40 @@ var Grid = require('../../lib/grid'),
 
 describe('grid', function () {
   describe('instantiate', function () {
+    var grid,
+        accessToken = 'foo',
+        gridUrl = 'http://grid.localhost/v1.0';
+    before(function () {
+      grid = new Grid(accessToken, gridUrl);
+    });
     it('should instantiate without error', function () {
-      var grid = new Grid();
       expect(grid).to.be.an.instanceof(Grid);
     });
   });
   describe('access token', function () {
     var grid,
-        accessToken = 'foo';
+        accessToken = 'foo',
+        gridUrl = 'http://grid.localhost/v1.0';
     before(function () {
-      grid = new Grid();
-      grid.setAccessToken(accessToken);
+      grid = new Grid(accessToken, gridUrl);
     });
     it('should retrieve the access token correctly', function () {
       expect(grid.getAccessToken()).to.equal(accessToken);
+    });
+  });
+  describe('event handlers', function () {
+    var grid,
+        accessToken = 'foo',
+        gridUrl = 'http://grid.localhost/v1.0';
+    before(function () {
+      grid = new Grid(accessToken, gridUrl);
+      grid.setupGridMessageHandler();
+    });
+    it('should emit an error', function (done) {
+      grid.on('error', function (err) {
+        done();
+      });
+      grid.gridClient.emit('transport:down');
     });
   });
 });
