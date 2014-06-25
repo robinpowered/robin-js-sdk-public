@@ -37,6 +37,15 @@ describe('grid', function () {
       expect(grid.getAccessToken()).to.equal(accessToken);
     });
   });
+  describe('no url', function () {
+    var grid,
+        accessToken = 'foo';
+    it('should throw an error', function () {
+      expect(function () {
+        grid = new Grid(accessToken);
+      }).to.throw(Error);
+    });
+  });
   describe('event handlers', function () {
     var grid,
         accessToken = 'foo',
