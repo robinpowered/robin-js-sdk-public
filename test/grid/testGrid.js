@@ -21,4 +21,15 @@ describe('grid', function () {
       expect(grid).to.be.an.instanceof(Grid);
     });
   });
+  describe('access token', function () {
+    var grid,
+        accessToken = 'foo';
+    before(function () {
+      grid = new Grid();
+      grid.setAccessToken(accessToken);
+    });
+    it('should retrieve the access token correctly', function () {
+      expect(grid.getAccessToken()).to.equal(accessToken);
+    });
+  });
 });

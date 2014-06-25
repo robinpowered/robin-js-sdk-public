@@ -28,4 +28,17 @@ describe('robin', function () {
       expect(robin).to.be.an.instanceof(Robin);
     });
   });
+  describe('relay identifier', function () {
+    var robin = new Robin('SampleAccessToken'),
+        relayIdentifier = 'foo';
+    before(function () {
+      robin.setRelayIdentifier(relayIdentifier)
+    });
+    it('should be the expected api relay identifier', function () {
+      expect(robin.grid.getRelayIdentifier()).to.equal(relayIdentifier);
+    });
+    it('should be the expected grid relay identifier', function () {
+      expect(robin.api.getRelayIdentifier()).to.equal(relayIdentifier);
+    });
+  });
 });

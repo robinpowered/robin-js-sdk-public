@@ -53,27 +53,19 @@ describe('api - base', function () {
       expect(apiBase.getRelayIdentifier()).to.equal(relayIdentifier);
     });
   });
-  describe('invalid request', function () {
+  describe('reject request', function (done) {
     it('should reject a request', function () {
       var apiBase = new ApiBase();
-      apiBase.rejectRequest().should.be.rejected;
+      apiBase.rejectRequest().should.be.rejected.and.notify(done);
     });
   });
-  describe('api responses', function () {
+  describe('api requests', function () {
     describe('build options', function () {
       var apiBase = new ApiBase();
-      it('should create an options object', function () {
-        var options = apiBase.buildOptions();
-        expect(options).to.not.be.empty;
-      });
-      describe('expected properties', function () {
-        var options = apiBase.buildOptions();
-        it('header', function () {
-          expect(options).to.have.property('headers');
-        });
-        it('uri', function () {
-          expect(options).to.have.property('uri');
-        });
+      it('should throw an error without an access token', function () {
+        expect(function () {
+          var options = apiBase.buildOptions();
+        }).to.throw(Error);
       });
       describe('headers', function () {
         var options;
@@ -118,7 +110,39 @@ describe('api - base', function () {
         });
       });
     });
-  })
+    describe('send requests', function () {
+      describe('request without access token', function (done) {
+        var apiBase;
+        before(function () {
+          apiBase = new ApiBase();
+        });
+        it('should reject this request', function () {
+          apiBase.sendRequest().should.be.rejected.and.notify(done);
+        });
+      });
+      describe('request without required arguments', function (done) {
+        var apiBase;
+        before(function () {
+          apiBase = new ApiBase();
+          apiBase.setAccessToken('foo');
+        });
+        it('should reject this request', function () {
+          apiBase.sendRequest().should.be.rejected.and.notify(done);
+        });
+      });
+      describe('use places api url for options', function (done) {
+        var apiBase;
+        before(function () {
+          apiBase = new ApiBase();
+          apiBase.setAccessToken('foo');
+        });
+        it('should reject this request', function () {
+          apiBase.sendRequest(null, null, null, null, true)
+          .should.be.rejected.and.notify(done);
+        });
+      });
+    });
+  });
   describe('api responses', function () {
     describe('test response success', function () {
       var apiBase = new ApiBase();

@@ -25,17 +25,12 @@ module.exports = (function () {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
-    try {
-      Robin.super_.constructor.call(this);
-      var coreApiUrl = 'https://api.robinpowered.com/v1.0',
-          placesApiUrl = 'https://apps.robinpowered.com/v1.0',
-          gridUrl = 'https://grid.robinpowered.com/v1.0';
-      this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
-      this.grid = new RobinGrid(accessToken, gridUrl);
-    }
-    catch (err) {
-      throw err;
-    }
+    Robin.super_.constructor.call(this);
+    var coreApiUrl = 'https://api.robinpowered.com/v1.0',
+        placesApiUrl = 'https://apps.robinpowered.com/v1.0',
+        gridUrl = 'https://grid.robinpowered.com/v1.0';
+    this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
+    this.grid = new RobinGrid(accessToken, gridUrl);
   }
 
   util.inherits(Robin, EventEmitter);
