@@ -9,10 +9,9 @@
  *
  */
 
-var RobinApi,
-    _apiModules,
+var _apiModules,
     _placesApiModules,
-    util = _dereq_('../util'),
+    util = _dereq_('util'),
     RobinApiBase = _dereq_('./base');
 
 // Having an object here is an awful hack, but it has to be done for browserify.
@@ -40,19 +39,19 @@ _placesApiModules = {
   spaces: _dereq_('./modules/spaces')
 };
 
-RobinApi = (function (_super) {
+module.exports = (function () {
 
-  function _RobinApi (accessToken, baseUrl, placesApiBaseUrl) {
-    _RobinApi.__super__.constructor.apply(this, arguments);
+  function RobinApi (accessToken, baseUrl, placesApiBaseUrl) {
+    RobinApi.super_.apply(this, arguments);
     this.setAccessToken(accessToken);
     this.baseUrl = baseUrl;
     this.placesApiBaseUrl = placesApiBaseUrl;
     this.loadModules();
   }
 
-  util.__extends(_RobinApi, _super);
+  util.inherits(RobinApi, RobinApiBase);
 
-  _RobinApi.prototype.loadModules = function () {
+  RobinApi.prototype.loadModules = function () {
     var ApiModule,
         _newModules = {},
         tempBaseUrl = this.baseUrl;
@@ -77,14 +76,10 @@ RobinApi = (function (_super) {
     }
   };
 
-  return _RobinApi;
+  return RobinApi;
+}).call(this);
 
-}).apply(this, [RobinApiBase]);
-
-
-module.exports = RobinApi;
-
-},{"../util":25,"./base":2,"./modules/accounts":4,"./modules/apps":5,"./modules/auth":6,"./modules/channels":7,"./modules/devicemanifests":8,"./modules/devices":9,"./modules/events":10,"./modules/identifiers":11,"./modules/locations":12,"./modules/me":13,"./modules/organizations":14,"./modules/personas":15,"./modules/projects":16,"./modules/spaces":17,"./modules/triggers":18,"./modules/users":19}],2:[function(_dereq_,module,exports){
+},{"./base":2,"./modules/accounts":4,"./modules/apps":5,"./modules/auth":6,"./modules/channels":7,"./modules/devicemanifests":8,"./modules/devices":9,"./modules/events":10,"./modules/identifiers":11,"./modules/locations":12,"./modules/me":13,"./modules/organizations":14,"./modules/personas":15,"./modules/projects":16,"./modules/spaces":17,"./modules/triggers":18,"./modules/users":19,"util":152}],2:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1684,7 +1679,7 @@ module.exports = Users;
  */
 
 var RobinGridBase,
-    util = _dereq_('../util'),
+    util = _dereq_('util'),
     faye = _dereq_('faye'),
     EventEmitter = _dereq_('events').EventEmitter;
 
@@ -1706,7 +1701,7 @@ RobinGridBase = (function (_super) {
 
   }
 
-  util.__extends(_RobinGridBase, _super);
+  util.inherits(_RobinGridBase, _super);
 
   _RobinGridBase.prototype.setAccessToken = function(token) {
     if (token) {
@@ -1787,7 +1782,7 @@ RobinGridBase = (function (_super) {
 
 module.exports = RobinGridBase;
 
-},{"../util":25,"events":153,"faye":154}],21:[function(_dereq_,module,exports){
+},{"events":153,"faye":154,"util":152}],21:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1799,7 +1794,8 @@ module.exports = RobinGridBase;
  */
 
 module.exports = (function () {
-  var util = _dereq_('../util'),
+  var util = _dereq_('util'),
+      RbnUtil = _dereq_('../util'),
       EventEmitter = _dereq_('events').EventEmitter;
 
   /**
@@ -1811,7 +1807,7 @@ module.exports = (function () {
    */
   function Connection (gridModule) {
     try {
-      util.__copyProperties(this, gridModule);
+      RbnUtil.__copyProperties(this, gridModule);
       this.validate();
       this.connectionStub = '/' + this.endpoint + '/' + this.identifier;
     } catch (err) {
@@ -1819,7 +1815,7 @@ module.exports = (function () {
     }
   }
 
-  util.__extends(this, EventEmitter);
+  util.inherits(this, EventEmitter);
 
   /**
    * Validates the endpoint and identifier we're using
@@ -1901,7 +1897,7 @@ module.exports = (function () {
   return Connection;
 }).call(this);
 
-},{"../util":25,"events":153}],22:[function(_dereq_,module,exports){
+},{"../util":25,"events":153,"util":152}],22:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1913,7 +1909,7 @@ module.exports = (function () {
  */
 
 var RobinGridBase = _dereq_('./base'),
-    util = _dereq_('../util'),
+    util = _dereq_('util'),
     _gridConnectionModules;
 
 // Initialize these there so that they're available to the RobinGrid when it's constructed
@@ -1929,14 +1925,14 @@ _gridConnectionModules = {
 module.exports = (function () {
 
   function RobinGrid (accessToken, baseUrl) {
-    RobinGrid.__super__.constructor.apply(this, arguments);
+    RobinGrid.super_.apply(this, arguments);
     this.subscriptions = {};
     this.setAccessToken(accessToken);
     this.setBaseUrl(baseUrl);
     this.setupGridMessageHandler();
   }
 
-  util.__extends(RobinGrid, RobinGridBase);
+  util.inherits(RobinGrid, RobinGridBase);
 
   /**
    * Instantiates each Robin Grid module class
@@ -1954,7 +1950,7 @@ module.exports = (function () {
   return RobinGrid;
 }).call();
 
-},{"../util":25,"./base":20,"./modules/device":24}],23:[function(_dereq_,module,exports){
+},{"./base":20,"./modules/device":24,"util":152}],23:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -1982,13 +1978,14 @@ module.exports = RobinGrid;
 
 module.exports = (function () {
   var Connection = _dereq_('../connection'),
-    util = _dereq_('../../util');
+    util = _dereq_('util'),
+    RbnUtil = _dereq_('../../util');
 
   function Device (grid) {
-    util.__copyProperties(this, grid);
+    RbnUtil.__copyProperties(this, grid);
   }
 
-  util.__extends(Device, Connection);
+  util.inherits(Device, Connection);
 
   Device.prototype.connect = function (identifier) {
     if (identifier) {
@@ -2003,7 +2000,7 @@ module.exports = (function () {
   return Device;
 }).call(this);
 
-},{"../../util":25,"../connection":21}],25:[function(_dereq_,module,exports){
+},{"../../util":25,"../connection":21,"util":152}],25:[function(_dereq_,module,exports){
 /*
  * robin-js-sdk
  * http://getrobin.com/
@@ -28042,8 +28039,8 @@ return Q;
 module.exports = (function () {
   var RobinApi = _dereq_('./lib/api'),
       RobinGrid = _dereq_('./lib/grid'),
-      util = _dereq_('./lib/util'),
-      Util = _dereq_('util'),
+      util = _dereq_('util'),
+      RbnUtil = _dereq_('./lib/util'),
       EventEmitter = _dereq_('events').EventEmitter;
 
   function Robin (accessToken, env) {
@@ -28052,9 +28049,9 @@ module.exports = (function () {
     }
     try {
       Robin.super_.constructor.call(this);
-      var _apiUrl = util.__getRobinUrl('api', env),
-          _placesApiUrl = util.__getRobinUrl('apps', env),
-          _gridUrl = util.__getRobinUrl('grid', env);
+      var _apiUrl = RbnUtil.__getRobinUrl('api', env),
+          _placesApiUrl = RbnUtil.__getRobinUrl('apps', env),
+          _gridUrl = RbnUtil.__getRobinUrl('grid', env);
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
@@ -28064,8 +28061,7 @@ module.exports = (function () {
     }
   }
 
-  // util.__extends(Robin, EventEmitter);
-  Util.inherits(Robin, EventEmitter);
+  util.inherits(Robin, EventEmitter);
 
   /**
    * Setup any event handlers for this SDK.
