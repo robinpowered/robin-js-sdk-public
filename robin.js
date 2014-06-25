@@ -19,21 +19,19 @@ module.exports = (function () {
   var RobinApi = require('./lib/api'),
       RobinGrid = require('./lib/grid'),
       util = require('util'),
-      RbnUtil = require('./lib/util'),
       EventEmitter = require('events').EventEmitter;
 
-  function Robin (accessToken, env) {
+  function Robin (accessToken) {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
     try {
       Robin.super_.constructor.call(this);
-      var _apiUrl = RbnUtil.__getRobinUrl('api', env),
-          _placesApiUrl = RbnUtil.__getRobinUrl('apps', env),
-          _gridUrl = RbnUtil.__getRobinUrl('grid', env);
-      this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
-      this.grid = new RobinGrid(accessToken, _gridUrl);
-      this.setupHandlers();
+      var coreApiUrl = 'https://api.robinpowered.com/v1.0',
+          placesApiUrl = 'https://apps.robinpowered.com/v1.0',
+          gridUrl = 'https://grid.robinpowered.com/v1.0';
+      this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
+      this.grid = new RobinGrid(accessToken, gridUrl);
     }
     catch (err) {
       throw err;
@@ -41,21 +39,6 @@ module.exports = (function () {
   }
 
   util.inherits(Robin, EventEmitter);
-
-  /**
-   * Setup any event handlers for this SDK.
-   */
-  Robin.prototype.setupHandlers = function () {
-    this.grid.on('error', this.onError.bind(this));
-  };
-
-  /**
-   * Handle any errors that bubble up. Want to intercept them here so we can log them.
-   * @param  {String|Object} err An error of some form.
-   */
-  Robin.prototype.onError = function (err) {
-    this.emit('error', err);
-  };
 
   Robin.prototype.setRelayIdentifier = function(relayIdentifier) {
     this.api.setRelayIdentifier(relayIdentifier);

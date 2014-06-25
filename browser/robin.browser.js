@@ -2015,36 +2015,6 @@ module.exports = (function () {
  */
 
 /**
- * A function that allows a class extend the prototype of the
- * another class. We use this so as to provide browser
- * @param  {Object} child  The class extending another
- * @param  {Object} parent The class being extended
- * @return {Object}        The extended class
- */
-module.exports.__extends = function (child, parent) {
-  if (typeof Object.create !== 'function') {
-    Object.create = function (o) {
-      function F() {
-        // Function left intentionally empty
-      }
-      F.prototype = o;
-      return new F();
-    };
-  }
-  // Don't instantiate parent class
-  child.prototype = Object.create(parent.prototype);
-  // Assign the child constructor to itself
-  child.prototype.constructor = child;
-  // Make sure the constructor is non-enumerable
-  Object.defineProperty(child.prototype, 'constructor', {
-    enumerable: false,
-    value: child
-  });
-  child.__super__ = parent.prototype;
-  return child;
-};
-
-/**
  * A function that copies all the properties of one object into
  * another
  * @param  {Object} child  The object receiving the properties
@@ -28040,21 +28010,19 @@ module.exports = (function () {
   var RobinApi = _dereq_('./lib/api'),
       RobinGrid = _dereq_('./lib/grid'),
       util = _dereq_('util'),
-      RbnUtil = _dereq_('./lib/util'),
       EventEmitter = _dereq_('events').EventEmitter;
 
-  function Robin (accessToken, env) {
+  function Robin (accessToken) {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
     try {
       Robin.super_.constructor.call(this);
-      var _apiUrl = RbnUtil.__getRobinUrl('api', env),
-          _placesApiUrl = RbnUtil.__getRobinUrl('apps', env),
-          _gridUrl = RbnUtil.__getRobinUrl('grid', env);
-      this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
-      this.grid = new RobinGrid(accessToken, _gridUrl);
-      this.setupHandlers();
+      var coreApiUrl = 'https://api.robinpowered.com/v1.0',
+          placesApiUrl = 'https://apps.robinpowered.com/v1.0',
+          gridUrl = 'https://grid.robinpowered.com/v1.0';
+      this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
+      this.grid = new RobinGrid(accessToken, gridUrl);
     }
     catch (err) {
       throw err;
@@ -28062,21 +28030,6 @@ module.exports = (function () {
   }
 
   util.inherits(Robin, EventEmitter);
-
-  /**
-   * Setup any event handlers for this SDK.
-   */
-  Robin.prototype.setupHandlers = function () {
-    this.grid.on('error', this.onError.bind(this));
-  };
-
-  /**
-   * Handle any errors that bubble up. Want to intercept them here so we can log them.
-   * @param  {String|Object} err An error of some form.
-   */
-  Robin.prototype.onError = function (err) {
-    this.emit('error', err);
-  };
 
   Robin.prototype.setRelayIdentifier = function(relayIdentifier) {
     this.api.setRelayIdentifier(relayIdentifier);
@@ -28086,6 +28039,6 @@ module.exports = (function () {
   return Robin;
 }).call(this);
 
-},{"./lib/api":3,"./lib/grid":23,"./lib/util":25,"events":153,"util":152}]},{},[156])
+},{"./lib/api":3,"./lib/grid":23,"events":153,"util":152}]},{},[156])
 (156)
 });
