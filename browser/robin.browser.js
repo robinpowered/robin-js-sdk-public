@@ -144,50 +144,54 @@ RobinApiBase = (function () {
         deferred = q.defer();
 
     // Have to do this check because we need to transparently handle both the places and core API in the same module.
-    if (usePlacesAPI) {
-      options = this.buildOptions(endpoint, method, json, queryStringObj, usePlacesAPI);
-    } else {
-      options = this.buildOptions(endpoint, method, json, queryStringObj);
-    }
-    request(options, function(error, response, body) {
-      var resp = {},
-          responseBody;
-      try {
-        if (typeof body === 'string') {
-          responseBody = JSON.parse(body);
-        } else {
-          responseBody = body;
-        }
-      } catch (err) {
-        return deferred.reject('An error occurred parsing the following response from the server: ' + body);
+    try {
+      if (usePlacesAPI) {
+        options = this.buildOptions(endpoint, method, json, queryStringObj, usePlacesAPI);
+      } else {
+        options = this.buildOptions(endpoint, method, json, queryStringObj);
       }
-      resp.body = responseBody;
-      if (self.isSuccess(error, response)) {
-        if (method === 'GET' && resp.body.paging) {
-          var pageSize, thisPage, prevPage, nextPage, pageFunc;
-          pageSize = resp.body.paging.per_page;
-          thisPage = resp.body.paging.page;
-          prevPage = (thisPage === 1 ? thisPage : thisPage - 1);
-          nextPage = thisPage + 1;
-          pageFunc = function (pageNum) {
-            var _pageNum;
-            _pageNum = pageNum;
-            return function () {
-              queryStringObj = (queryStringObj === undefined || !queryStringObj) ? {}: queryStringObj;
-              queryStringObj.page = _pageNum;
-              queryStringObj.per_page = pageSize;
-              return self.sendRequest(endpoint, method, json, queryStringObj, usePlacesAPI);
+      request(options, function(error, response, body) {
+        var resp = {},
+            responseBody;
+        try {
+          if (typeof body === 'string') {
+            responseBody = JSON.parse(body);
+          } else {
+            responseBody = body;
+          }
+        } catch (err) {
+          return deferred.reject('An error occurred parsing the following response from the server: ' + body);
+        }
+        resp.body = responseBody;
+        if (self.isSuccess(error, response)) {
+          if (method === 'GET' && resp.body.paging) {
+            var pageSize, thisPage, prevPage, nextPage, pageFunc;
+            pageSize = resp.body.paging.per_page;
+            thisPage = resp.body.paging.page;
+            prevPage = (thisPage === 1 ? thisPage : thisPage - 1);
+            nextPage = thisPage + 1;
+            pageFunc = function (pageNum) {
+              var _pageNum;
+              _pageNum = pageNum;
+              return function () {
+                queryStringObj = (queryStringObj === undefined || !queryStringObj) ? {}: queryStringObj;
+                queryStringObj.page = _pageNum;
+                queryStringObj.per_page = pageSize;
+                return self.sendRequest(endpoint, method, json, queryStringObj, usePlacesAPI);
+              };
             };
-          };
-          resp.nextPage = pageFunc(nextPage);
-          resp.prevPage = pageFunc(prevPage);
+            resp.nextPage = pageFunc(nextPage);
+            resp.prevPage = pageFunc(prevPage);
+          }
+          return deferred.resolve(resp);
         }
-        return deferred.resolve(resp);
-      }
-      else {
-        return deferred.reject(resp);
-      }
-    });
+        else {
+          return deferred.reject(resp);
+        }
+      });
+    } catch (err) {
+      deferred.reject(err);
+    }
     return deferred.promise;
   };
 
@@ -211,6 +215,8 @@ RobinApiBase = (function () {
 
     if (accessToken) {
       options.headers.Authorization = 'Access-Token ' + accessToken;
+    } else {
+      throw new Error('The required Access Token is missing or malformed');
     }
 
     if (relayIdentifier) {
@@ -1737,9 +1743,8 @@ RobinGridBase = (function (_super) {
     var incomingExt, outgoingExt;
 
     if (this._baseUrl) {
-      this.fayeClient = new faye.Client(this._baseUrl);
-      this.subscribe = this.fayeClient.subscribe;
-      this.fayeClient.on('transport:down', function () {
+      this.gridClient = new faye.Client(this._baseUrl);
+      this.gridClient.on('transport:down', function () {
         this.emit('error', 'Grid transport is down.');
       }.bind(this));
       incomingExt = function (message, callback) {
@@ -1770,7 +1775,7 @@ RobinGridBase = (function (_super) {
         message.ext.relayIdentifier = this.getRelayIdentifier();
         callback(message);
       }.bind(this);
-      this.fayeClient.addExtension({
+      this.gridClient.addExtension({
         incoming: incomingExt,
         outgoing: outgoingExt
       });
@@ -1841,7 +1846,7 @@ module.exports = (function () {
   Connection.prototype.listen = function (callback) {
     //Asterisk listens to all message types, so we can emit for different message types
     var listeningChannel = this.connectionStub + '/*';
-    this.connection = this.subscribe(listeningChannel, function (message) {
+    this.connection = this.gridClient.subscribe(listeningChannel, function (message) {
       this.emit(message.ext.type, message.data);
     }.bind(this));
     this.connection.then(function (resp) {
@@ -1882,7 +1887,7 @@ module.exports = (function () {
   Connection.prototype.send = function(messageType, message, callback) {
     var published,
         sendingChannel = this.connectionStub + '/' + messageType;
-    published = this.fayeClient.publish(sendingChannel, message);
+    published = this.gridClient.publish(sendingChannel, message);
     published.then(function (resp) {
       if (callback) {
         callback(null, resp);
@@ -2029,37 +2034,6 @@ module.exports.__copyProperties = function (child, parent) {
     }
     child.__super__ = parent;
   }
-};
-
-/**
- * Construct a robin url for the api, grid or whatever other platform we have
- * @param  {String} robinType The type of Robin app we're using. Currently 'grid' or 'api'
- * @param  {String} env       An optional environment type we can use to
- *                            direct our requests to. If blank, defaults to production -
- *                            otherwise goes to 'staging' or 'test'.
- * @return {String}           The url for the selected Robin platform
- */
-exports.__getRobinUrl = function (robinType, env) {
-  var _robinUrl = '',
-      _env = '',
-      _version = 'v1.0',
-      _robinStub = '.robinpowered.com',
-      _protocol = 'https://';
-
-  if (!robinType) {
-    throw new TypeError('`robinType` is a required parameter');
-  }
-
-  if (env) {
-    _env = '.' + env;
-    if (env === 'test') {
-      _protocol = 'http://';
-    }
-  }
-
-  _robinUrl = _protocol + robinType + _env + _robinStub + '/' + _version;
-
-  return _robinUrl;
 };
 
 },{}],26:[function(_dereq_,module,exports){
@@ -28016,17 +27990,12 @@ module.exports = (function () {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
-    try {
-      Robin.super_.constructor.call(this);
-      var coreApiUrl = 'https://api.robinpowered.com/v1.0',
-          placesApiUrl = 'https://apps.robinpowered.com/v1.0',
-          gridUrl = 'https://grid.robinpowered.com/v1.0';
-      this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
-      this.grid = new RobinGrid(accessToken, gridUrl);
-    }
-    catch (err) {
-      throw err;
-    }
+    Robin.super_.constructor.call(this);
+    var coreApiUrl = 'https://api.robinpowered.com/v1.0',
+        placesApiUrl = 'https://apps.robinpowered.com/v1.0',
+        gridUrl = 'https://grid.robinpowered.com/v1.0';
+    this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
+    this.grid = new RobinGrid(accessToken, gridUrl);
   }
 
   util.inherits(Robin, EventEmitter);
