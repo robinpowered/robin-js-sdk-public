@@ -9,7 +9,10 @@ var gruntModules = [
   'grunt-contrib-clean',
   'grunt-mocha-test',
   'grunt-blanket',
-  'grunt-jscs-checker'
+  'grunt-jscs-checker',
+  'grunt-contrib-compress',
+  'grunt-browserify',
+  'grunt-contrib-uglify'
 ];
 
 module.exports = function(grunt) {

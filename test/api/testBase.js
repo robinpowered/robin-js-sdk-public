@@ -59,7 +59,7 @@ describe('api - base', function () {
       apiBase.rejectRequest().should.be.rejected;
     });
   });
-  describe('REQUESTS', function () {
+  describe('api responses', function () {
     describe('build options', function () {
       var apiBase = new ApiBase();
       it('should create an options object', function () {
@@ -119,7 +119,7 @@ describe('api - base', function () {
       });
     });
   })
-  describe('RESPONSES', function () {
+  describe('api responses', function () {
     describe('test response success', function () {
       var apiBase = new ApiBase();
       it('should return false without arguments', function () {

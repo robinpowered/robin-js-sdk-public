@@ -18,7 +18,8 @@
 module.exports = (function () {
   var RobinApi = require('./lib/api'),
       RobinGrid = require('./lib/grid'),
-      util = require('./lib/util'),
+      util = require('util'),
+      RbnUtil = require('./lib/util'),
       EventEmitter = require('events').EventEmitter;
 
   function Robin (accessToken, env) {
@@ -26,10 +27,10 @@ module.exports = (function () {
       throw new TypeError('A Robin Access Token must be supplied');
     }
     try {
-      Robin.__super__.constructor.call(this);
-      var _apiUrl = util.__getRobinUrl('api', env),
-          _placesApiUrl = util.__getRobinUrl('apps', env),
-          _gridUrl = util.__getRobinUrl('grid', env);
+      Robin.super_.constructor.call(this);
+      var _apiUrl = RbnUtil.__getRobinUrl('api', env),
+          _placesApiUrl = RbnUtil.__getRobinUrl('apps', env),
+          _gridUrl = RbnUtil.__getRobinUrl('grid', env);
       this.api = new RobinApi(accessToken, _apiUrl, _placesApiUrl);
       this.grid = new RobinGrid(accessToken, _gridUrl);
       this.setupHandlers();
@@ -39,13 +40,13 @@ module.exports = (function () {
     }
   }
 
-  util.__extends(Robin, EventEmitter);
+  util.inherits(Robin, EventEmitter);
 
   /**
    * Setup any event handlers for this SDK.
    */
   Robin.prototype.setupHandlers = function () {
-    this.grid.on('error', util.__bind(this.onError, this));
+    this.grid.on('error', this.onError.bind(this));
   };
 
   /**
