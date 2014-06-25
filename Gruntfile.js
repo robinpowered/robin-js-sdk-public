@@ -63,8 +63,9 @@ module.exports = function(grunt) {
     },
     browserify: {
       robin: {
-        src: ['robin.js'],
-        dest: 'browser/robin.browser.js',
+        files: {
+          'browser/robin.browser.js': ['robin.js']
+        },
         options: {
           browserifyOptions: {
             basedir: '.'
@@ -73,7 +74,17 @@ module.exports = function(grunt) {
             standalone: 'Robin',
           }
         }
-      }
+      },
+      tests: {
+        files: {
+          'reports/robin.browser.tests.js': ['test/**/test*.js']
+        },
+        options: {
+          browserifyOptions: {
+            basedir: '.'
+          }
+        }
+      },
     },
     compress: {
       robin: {
@@ -132,7 +143,7 @@ module.exports = function(grunt) {
           quiet: true,
           // specify a destination file to capture the mocha
           // output (the quiet option does not suppress this)
-          captureFile: 'coverage/coverage.html'
+          captureFile: 'reports/coverage.html'
         },
         src: ['coverage/test/**/test*.js']
       }
@@ -144,7 +155,7 @@ module.exports = function(grunt) {
   grunt.registerTask('style', ['jscs:lib']);
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
   grunt.registerTask('test', ['clean', 'copy:src', 'blanket', 'copy:test', 'mochaTest']);
-  grunt.registerTask('browser', ['browserify:robin', 'uglify:robin']);
+  grunt.registerTask('browser', ['browserify', 'uglify:robin']);
   grunt.registerTask('build', ['lint', 'test', 'browser']);
 
 };
