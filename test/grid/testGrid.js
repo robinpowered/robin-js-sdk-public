@@ -61,4 +61,46 @@ describe('grid', function () {
       grid.gridClient.emit('transport:down');
     });
   });
+  describe('incoming messages', function () {
+    var grid,
+        accessToken = 'foo',
+        gridUrl = 'http://grid.localhost/v1.0';
+    before(function () {
+      grid = new Grid(accessToken, gridUrl);
+      grid.setupGridMessageHandler();
+    });
+    it('should throw an error on an empty message', function (done) {
+      var message = {};
+      grid.gridClient._extensions[0].incoming(message, function (message) {
+        expect(message).to.have.property('error');
+        done();
+      });
+    });
+    it('should throw an error on an invalid message', function (done) {
+      var message = {
+        channel: '/foo/bar',
+        data: {}
+      };
+      grid.gridClient._extensions[0].incoming(message, function (message) {
+        expect(message).to.have.property('error');
+        done();
+      });
+    });
+  });
+  describe('outgoing messages', function () {
+    var grid,
+        accessToken = 'foo',
+        gridUrl = 'http://grid.localhost/v1.0';
+    before(function () {
+      grid = new Grid(accessToken, gridUrl);
+      grid.setupGridMessageHandler();
+    });
+    it('should have an `ext` field with an empty message', function (done) {
+      var message = {};
+      grid.gridClient._extensions[0].outgoing(message, function (message) {
+        expect(message).to.have.property('ext');
+        done();
+      });
+    });
+  });
 });
