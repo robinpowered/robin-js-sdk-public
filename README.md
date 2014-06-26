@@ -52,13 +52,13 @@ The Grid exposes several functions, these are:
 
 The following should be implemented:
 
-* Support for use in browsers, as well as node.js
-* Add winston for logging - will this work in browsers?
-* Handle scope of access tokens for extended functionality (such as retrieving all API items)
-* Adhere to Robin Javascript Coding Standards - this is TBD.
-* Implement API function arguments based on API documentation
-* Expand documentation to include all API modules
-* Can we autogenerate API module functions based on a object template?
+* [x] Support for use in browsers, as well as node.js
+* [ ] Add winston for logging - will this work in browsers?
+* [ ] Handle scope of access tokens for extended functionality (such as retrieving all API items)
+* [ ] Adhere to Robin Javascript Coding Standards - this is TBD.
+* [ ] Implement API function arguments based on API documentation
+* [ ] Expand documentation to include all API modules
+* [ ] Can we autogenerate API module functions based on a object template?
 
 ## Browserify
 
