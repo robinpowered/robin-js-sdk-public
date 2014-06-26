@@ -48,20 +48,6 @@ The Grid exposes several functions, these are:
 * `leave` - Disconnects the client from receiving updates for a particular channel
 * `send` - Allows a client to send messages to a channel.
 
-Use Case:
-
-var device = robin.grid.devices.connect(identifier);
-device.on('foo', function () {
-    console.log('foo');
-});
-device.send({
-    foo: 'bar'
-});
-
-Structure:
-
-
-
 ## Development Roadmap
 
 The following should be implemented:
