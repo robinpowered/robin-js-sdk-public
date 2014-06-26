@@ -28,3 +28,6 @@ node_modules
 test/config.js
 test.html
 test.js
+
+# Dist directory - for now
+dist/
