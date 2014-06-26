@@ -160,7 +160,6 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('style', ['jscs:lib']);
-  grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
   grunt.registerTask('coverage', ['copy:src', 'blanket', 'copy:test', 'mochaTest:coverage']);
   grunt.registerTask('test', ['mochaTest:test']);
   grunt.registerTask('browser', ['browserify', 'uglify:robin']);
