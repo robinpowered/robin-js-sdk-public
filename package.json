@@ -68,10 +68,5 @@
   "browser": {
     "fs": "brfs",
     "request": "browser-request"
-  },
-  "config": {
-    "blanket": {
-      "pattern": "lib/"
-    }
   }
 }
