@@ -53,13 +53,20 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-      options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
+      src: {
+        options: {
+          jshintrc: '.jshintrc',
+          reporter: require('jshint-stylish')
+        },
+        src: ['Gruntfile.js', 'robin.js', 'lib/**/*.js'],
       },
-      all: [
-        'Gruntfile.js', 'robin.js', 'lib/**/*.js', 'test/**/*.js'
-      ]
+      test: {
+        options: {
+          jshintrc: '.jshintrc-test',
+          reporter: require('jshint-stylish'),
+        },
+        src: ['test/**/*.js']
+      }
     },
     browserify: {
       robin: {

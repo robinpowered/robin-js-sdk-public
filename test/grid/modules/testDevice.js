@@ -12,9 +12,7 @@ var Device = require('../../../lib/grid/modules/device'),
     Connection = require('../../../lib/grid/connection'),
     Grid = require('../../../lib/grid'),
     chai = require('chai'),
-    assert = chai.assert,
     expect = chai.expect,
-    should = chai.should(),
     grid;
 
 before(function () {

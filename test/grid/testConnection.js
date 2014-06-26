@@ -10,28 +10,24 @@
 
 var Connection = require('../../lib/grid/connection'),
     chai = require('chai'),
-    util = require('util'),
-    assert = chai.assert,
     expect = chai.expect,
-    should = chai.should(),
-    Device = require('../../lib/grid/modules/device'),
     Grid = require('../../lib/grid'),
     grid,
-    device,
     sinon = require('sinon'),
     q = require('q');
 
 before(function () {
   var accessToken = 'foo',
-      gridUrl = 'http://grid.localhost/v1.0'
+      gridUrl = 'http://grid.localhost/v1.0';
   grid = new Grid(accessToken, gridUrl);
 });
 
 describe('grid - connection', function () {
   describe('instantiate', function () {
     it('should throw an error', function () {
+      var connection;
       expect(function () {
-        var connection = new Connection();
+        connection = new Connection();
       }).to.throw(Error);
     });
     describe('empty grid module argument', function () {
@@ -40,8 +36,9 @@ describe('grid - connection', function () {
         gridModuleMock = {};
       });
       it('should throw an error with empty module', function () {
+        var connection;
         expect(function () {
-          var connection = new Connection(gridModuleMock);
+          connection = new Connection(gridModuleMock);
         }).to.throw(Error);
       });
     });
@@ -53,8 +50,9 @@ describe('grid - connection', function () {
         };
       });
       it('should throw an error with an invalid module', function () {
+        var connection;
         expect(function () {
-          var connection = new Connection(gridModuleMock);
+          connection = new Connection(gridModuleMock);
         }).to.throw(Error);
       });
     });
@@ -116,9 +114,7 @@ describe('grid - connection', function () {
       });
       describe('emit message', function () {
         var connection,
-            message,
-            deferred,
-            resolvedStub;
+            message;
         before(function () {
           connection = grid.device.connect(15);
           message = {
@@ -128,7 +124,7 @@ describe('grid - connection', function () {
             data: {
               foo: 'bar'
             }
-          }
+          };
         });
         it('should set up a listener', function (done) {
           connection.on(message.ext.type, function (data) {
@@ -143,10 +139,10 @@ describe('grid - connection', function () {
             resolvedStub;
         before(function () {
           subscriptionObj = q.defer();
-            subscriptionObj.resolve('Resolved Message');
-            subscriptionObj.promise.cancel = function () {
-              return undefined;
-            };
+          subscriptionObj.resolve('Resolved Message');
+          subscriptionObj.promise.cancel = function () {
+            return undefined;
+          };
         });
         describe('error', function () {
           var connection;
@@ -188,10 +184,10 @@ describe('grid - connection', function () {
     describe('send messages to connection', function () {
       describe('send error', function () {
         var connection,
+            resolvedStub,
             publishObj = q.defer(),
-            message = {
-              foo: 'bar'
-            };
+            message = {};
+        message.foo = 'bar';
         before(function () {
           connection = grid.device.connect(15);
           publishObj.reject('Can\'t send this message now');
@@ -210,10 +206,10 @@ describe('grid - connection', function () {
       });
       describe('send success', function () {
         var connection,
+            resolvedStub,
             publishObj = q.defer(),
-            message = {
-              foo: 'bar'
-            };
+            message = {};
+        message.foo = 'bar';
         before(function () {
           connection = grid.device.connect(15);
           publishObj.resolve('Message Sent Successfully');

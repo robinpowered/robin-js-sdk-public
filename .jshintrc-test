@@ -5,6 +5,7 @@
   "bitwise": true,
   "curly": true,
   "eqeqeq": true,
+  "expr": true,
   "immed": true,
   "indent": 2,
   "newcap": true,
@@ -14,5 +15,13 @@
   "unused": "vars",
   "undef": true,
   "trailing": true,
-  "smarttabs": true
+  "smarttabs": true,
+  "globals": {
+    "describe": false,
+    "it": false,
+    "before": false,
+    "beforeEach": false,
+    "after": false,
+    "afterEach": false
+  }
 }

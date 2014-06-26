@@ -10,9 +10,7 @@
 
 var Grid = require('../../lib/grid'),
     chai = require('chai'),
-    assert = chai.assert,
-    expect = chai.expect,
-    should = chai.should();
+    expect = chai.expect;
 
 describe('grid', function () {
   describe('instantiate', function () {

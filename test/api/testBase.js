@@ -30,9 +30,9 @@ describe('api - base', function () {
     });
   });
   describe('acccess token operations', function () {
-    it('should return undefined', function (done) {
+    it('should return undefined', function () {
       var apiBase = new ApiBase();
-      expect(apiBase.getAccessToken()).to.be.undefined.and.notify(done);
+      expect(apiBase.getAccessToken()).to.be.undefined;
     });
     it('should set the correct access token', function () {
       var apiBase = new ApiBase(),
@@ -63,8 +63,9 @@ describe('api - base', function () {
     describe('build options', function () {
       var apiBase = new ApiBase();
       it('should throw an error without an access token', function () {
+        var options;
         expect(function () {
-          var options = apiBase.buildOptions();
+          options = apiBase.buildOptions();
         }).to.throw(Error);
       });
       describe('headers', function () {
@@ -155,28 +156,25 @@ describe('api - base', function () {
       });
       it('should return false if there\'s a status of less than 200', function () {
         var err = {},
-            res = {
-              statusCode: 199
-            };
+            res = {};
+        res.statusCode = 199;
         expect(apiBase.isSuccess(err, res)).to.be.false;
       });
       it('should return false if there\'s a status of greater than 300', function () {
-        var err = undefined,
-            res = {
-              statusCode: 301
-            };
+        var err = {},
+            res = {};
+        res.statusCode = 301;
         expect(apiBase.isSuccess(err, res)).to.be.false;
       });
       it('should return false if there\'s no status code', function () {
-        var err = undefined,
+        var err,
             res = {};
         expect(apiBase.isSuccess(err, res)).to.be.false;
       });
       it('should return true if there\'s a status between 200 and 300', function () {
-        var err = undefined,
-            res = {
-              statusCode: 201
-            };
+        var err,
+            res = {};
+        res.statusCode = 204;
         expect(apiBase.isSuccess(err, res)).to.be.true;
       });
     });

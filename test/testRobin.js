@@ -9,18 +9,15 @@
  */
 
 var Robin = require('../robin'),
-    Api = require('../lib/api'),
-    Grid = require('../lib/grid'),
     chai = require('chai'),
-    assert = chai.assert,
-    expect = chai.expect,
-    should = chai.should();
+    expect = chai.expect;
 
 describe('robin', function () {
   describe('instantiate', function () {
     it('should throw an error', function () {
+      var robin;
       expect(function () {
-        var robin = new Robin();
+        robin = new Robin();
       }).to.throw(TypeError);
     });
     it('should instantiate without error', function () {
@@ -32,7 +29,7 @@ describe('robin', function () {
     var robin = new Robin('SampleAccessToken'),
         relayIdentifier = 'foo';
     before(function () {
-      robin.setRelayIdentifier(relayIdentifier)
+      robin.setRelayIdentifier(relayIdentifier);
     });
     it('should be the expected api relay identifier', function () {
       expect(robin.grid.getRelayIdentifier()).to.equal(relayIdentifier);
