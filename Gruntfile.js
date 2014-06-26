@@ -58,7 +58,7 @@ module.exports = function(grunt) {
         reporter: require('jshint-stylish')
       },
       all: [
-        'Gruntfile.js', 'robin.js', 'lib/**/*.js'
+        'Gruntfile.js', 'robin.js', 'lib/**/*.js', 'test/**/*.js'
       ]
     },
     browserify: {

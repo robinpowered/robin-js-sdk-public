@@ -10,9 +10,7 @@
 
 var Api = require('../../lib/api'),
     chai = require('chai'),
-    assert = chai.assert,
-    expect = chai.expect,
-    should = chai.should();
+    expect = chai.expect;
 
 describe('api', function () {
   describe('instantiate', function () {

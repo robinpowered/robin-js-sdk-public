@@ -30,9 +30,9 @@ describe('api - base', function () {
     });
   });
   describe('acccess token operations', function () {
-    it('should return undefined', function () {
+    it('should return undefined', function (done) {
       var apiBase = new ApiBase();
-      expect(apiBase.getAccessToken()).to.be.undefined;
+      expect(apiBase.getAccessToken()).to.be.undefined.and.notify(done);
     });
     it('should set the correct access token', function () {
       var apiBase = new ApiBase(),
