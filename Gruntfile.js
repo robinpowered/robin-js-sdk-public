@@ -48,7 +48,7 @@ module.exports = function(grunt) {
           report: 'gzip'
         },
         files: {
-          'browser/robin.browser.min.js': ['browser/robin.browser.js']
+          'dist/robin.browser.min.js': ['dist/robin.browser.js']
         }
       }
     },
@@ -64,7 +64,7 @@ module.exports = function(grunt) {
     browserify: {
       robin: {
         files: {
-          'browser/robin.browser.js': ['robin.js']
+          'dist/robin.browser.js': ['robin.js']
         },
         options: {
           browserifyOptions: {
@@ -77,7 +77,7 @@ module.exports = function(grunt) {
       },
       tests: {
         files: {
-          'reports/robin.browser.tests.js': ['test/**/test*.js']
+          'dist/robin.browser.tests.js': ['test/**/test*.js']
         },
         options: {
           browserifyOptions: {
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
     compress: {
       robin: {
         files: {
-          'browser/robin.browser.min.js.gzip': ['browser/robin.browser.min.js']
+          'dist/robin.browser.min.js.gzip': ['dist/robin.browser.min.js']
         },
         options: {
           mode: 'gzip',
@@ -118,7 +118,7 @@ module.exports = function(grunt) {
         dest: 'coverage/'
       },
       test: {
-        src: ['test/**/*.js'],
+        src: ['test/**/test*.js'],
         dest: 'coverage/'
       }
     },
@@ -134,7 +134,7 @@ module.exports = function(grunt) {
           reporter: 'spec',
           timeout: 1000
         },
-        src: ['coverage/test/**/test*.js']
+        src: ['test/**/test*.js']
       },
       coverage: {
         options: {
@@ -143,7 +143,7 @@ module.exports = function(grunt) {
           quiet: true,
           // specify a destination file to capture the mocha
           // output (the quiet option does not suppress this)
-          captureFile: 'reports/coverage.html'
+          captureFile: 'dist/coverage.html'
         },
         src: ['coverage/test/**/test*.js']
       }
@@ -154,7 +154,8 @@ module.exports = function(grunt) {
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('style', ['jscs:lib']);
   grunt.registerTask('compile', ['jshint', 'nodeunit', 'concat', 'uglify']);
-  grunt.registerTask('test', ['clean', 'copy:src', 'blanket', 'copy:test', 'mochaTest']);
+  grunt.registerTask('coverage', ['copy:src', 'blanket', 'copy:test', 'mochaTest:coverage']);
+  grunt.registerTask('test', ['mochaTest:test']);
   grunt.registerTask('browser', ['browserify', 'uglify:robin']);
   grunt.registerTask('build', ['lint', 'test', 'browser']);
 
