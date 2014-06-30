@@ -11,8 +11,6 @@
 /**
  * The Robin SDK provides the interface for interactions with the API
  * as well as the grid.
- * @param  {Object} _super The superclass this Robin module inherits from.
- * In this case, it is an EventEmitter.
  * @return {Function}      The Robin SDK Object.
  */
 module.exports = (function () {
@@ -35,7 +33,11 @@ module.exports = (function () {
 
   util.inherits(Robin, EventEmitter);
 
-  Robin.prototype.setRelayIdentifier = function(relayIdentifier) {
+  /**
+   * Set a relay identifier for requests to Robin
+   * @param {String} relayIdentifier A Robin Identifier for a relay device.
+   */
+  Robin.prototype.setRelayIdentifier = function (relayIdentifier) {
     this.api.setRelayIdentifier(relayIdentifier);
     this.grid.setRelayIdentifier(relayIdentifier);
   };

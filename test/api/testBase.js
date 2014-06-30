@@ -81,13 +81,16 @@ describe('api - base', function () {
         it('should have relay identifier header', function () {
           expect(options.headers['Relay-Identifier']).to.equal('bar');
         });
+        it('should have relay identifier header', function () {
+          expect(options.method).to.be.undefined;
+        });
       });
       describe('build optional options for core api', function () {
         var getOptions,
             postOptions;
         before(function () {
-          getOptions = apiBase.buildOptions('/foo', 'GET', null, {foo: 'bar'});
-          postOptions = apiBase.buildOptions('/foo', 'GET', {foo: 'bar'}, null);
+          getOptions = apiBase.buildOptions('/foo', 'GET', {foo: 'bar'});
+          postOptions = apiBase.buildOptions('/foo', 'POST', {foo: 'bar'});
         });
         it('getOptions should have a qs property', function () {
           expect(getOptions).to.have.property('qs');
@@ -100,8 +103,8 @@ describe('api - base', function () {
         var getOptions,
             postOptions;
         before(function () {
-          getOptions = apiBase.buildOptions('/foo', 'GET', null, {foo: 'bar'}, true);
-          postOptions = apiBase.buildOptions('/foo', 'GET', {foo: 'bar'}, null, true);
+          getOptions = apiBase.buildOptions('/foo', 'GET', {foo: 'bar'}, true);
+          postOptions = apiBase.buildOptions('/foo', 'POST', {foo: 'bar'}, true);
         });
         it('getOptions should have a qs property', function () {
           expect(getOptions).to.have.property('qs');
