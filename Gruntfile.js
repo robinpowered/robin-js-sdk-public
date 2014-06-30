@@ -66,6 +66,13 @@ module.exports = function(grunt) {
           reporter: require('jshint-stylish'),
         },
         src: ['test/**/*.js']
+      },
+      postInstall: {
+        options: {
+          jshintrc: '.jshintrc',
+          reporter: require('jshint-stylish'),
+        },
+        src: ['scripts/postInstall.js']
       }
     },
     browserify: {
