@@ -16,17 +16,18 @@
 module.exports = (function () {
   var RobinApi = require('./lib/api'),
       RobinGrid = require('./lib/grid'),
+      RbnUtil = require('./lib/util'),
       util = require('util'),
       EventEmitter = require('events').EventEmitter;
 
-  function Robin (accessToken) {
+  function Robin (accessToken, env) {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
     Robin.super_.constructor.call(this);
-    var coreApiUrl = 'https://api.robinpowered.com/v1.0/',
-        placesApiUrl = 'https://apps.robinpowered.com/v1.0/',
-        gridUrl = 'https://grid.robinpowered.com/v1.0/';
+    var coreApiUrl = RbnUtil.constructRobinUrl('api', env),
+        placesApiUrl = RbnUtil.constructRobinUrl('apps', env),
+        gridUrl = RbnUtil.constructRobinUrl('grid', env);
     this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
     this.grid = new RobinGrid(accessToken, gridUrl);
   }
