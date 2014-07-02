@@ -1,16 +1,36 @@
+'use strict';
 /*global module:false*/
+
+// Configure the grunt modules we want to use here
+var gruntModules = [
+  'grunt-contrib-nodeunit',
+  'grunt-contrib-jshint',
+  'grunt-contrib-copy',
+  'grunt-contrib-clean',
+  'grunt-mocha-test',
+  'grunt-blanket',
+  'grunt-jscs-checker',
+  'grunt-contrib-compress',
+  'grunt-browserify',
+  'grunt-contrib-uglify'
+];
+
 module.exports = function(grunt) {
+
+  // The `time-grunt` module provides a handy output of the run time of each
+  // grunt task
+  require('time-grunt')(grunt);
+
+  // Load these necessary tasks
+  gruntModules.forEach(function (gruntModule) {
+    grunt.loadNpmTasks(gruntModule);
+  });
+
 
   // Project configuration.
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
-    // Task configuration.
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -22,60 +42,134 @@ module.exports = function(grunt) {
       }
     },
     uglify: {
-      options: {
-        banner: '<%= banner %>'
-      },
-      dist: {
-        src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+      robin: {
+        options: {
+          drop_console: true,
+          report: 'gzip'
+        },
+        files: {
+          'dist/robin.browser.min.js': ['dist/robin.browser.js']
+        }
       }
     },
     jshint: {
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        globals: {}
+      src: {
+        options: {
+          jshintrc: '.jshintrc',
+          reporter: require('jshint-stylish')
+        },
+        src: ['Gruntfile.js', 'robin.js', 'lib/**/*.js'],
       },
-      gruntfile: {
-        src: 'Gruntfile.js'
+      test: {
+        options: {
+          jshintrc: '.jshintrc-test',
+          reporter: require('jshint-stylish'),
+        },
+        src: ['test/**/*.js']
       },
-      lib_test: {
-        src: ['lib/**/*.js', 'test/**/*.js']
+      postInstall: {
+        options: {
+          jshintrc: '.jshintrc',
+          reporter: require('jshint-stylish'),
+        },
+        src: ['scripts/postInstall.js']
       }
     },
-    qunit: {
-      files: ['test/**/*.html']
-    },
-    watch: {
-      gruntfile: {
-        files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
+    browserify: {
+      robin: {
+        files: {
+          'dist/robin.browser.js': ['robin.js']
+        },
+        options: {
+          browserifyOptions: {
+            basedir: '.'
+          },
+          bundleOptions: {
+            standalone: 'Robin',
+          }
+        }
       },
-      lib_test: {
-        files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'qunit']
+      tests: {
+        files: {
+          'dist/robin.browser.tests.js': ['test/**/test*.js']
+        },
+        options: {
+          browserifyOptions: {
+            basedir: '.'
+          }
+        }
+      },
+    },
+    compress: {
+      robin: {
+        files: {
+          'dist/robin.browser.min.js.gzip': ['dist/robin.browser.min.js']
+        },
+        options: {
+          mode: 'gzip',
+          level: 9,
+          pretty: true
+        }
       }
-    }
+    },
+    jscs: {
+      lib: {
+        src: ['./robin.js', 'lib/**/*.js'],
+        options: {
+          config: '.jscs.json',
+          reporter: 'console'
+        }
+      }
+    },
+    clean: {
+      coverage: {
+        src: ['coverage/']
+      }
+    },
+    copy: {
+      src: {
+        src: ['robin.js', 'lib/**/*.js'],
+        dest: 'coverage/'
+      },
+      test: {
+        src: ['test/**/test*.js'],
+        dest: 'coverage/'
+      }
+    },
+    blanket: {
+      coverage: {
+        src: ['coverage/'],
+        dest: 'coverage/'
+      }
+    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          timeout: 1000
+        },
+        src: ['test/**/test*.js']
+      },
+      coverage: {
+        options: {
+          reporter: 'html-cov',
+          // use the quiet flag to suppress the mocha console output
+          quiet: true,
+          // specify a destination file to capture the mocha
+          // output (the quiet option does not suppress this)
+          captureFile: 'dist/coverage.html'
+        },
+        src: ['coverage/test/**/test*.js']
+      }
+    },
   });
 
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-
   // Default task.
-  grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('style', ['jscs:lib']);
+  grunt.registerTask('coverage', ['copy:src', 'blanket', 'copy:test', 'mochaTest:coverage']);
+  grunt.registerTask('test', ['mochaTest:test']);
+  grunt.registerTask('browser', ['browserify', 'uglify:robin']);
+  grunt.registerTask('build', ['lint', 'test', 'browser']);
 
 };
