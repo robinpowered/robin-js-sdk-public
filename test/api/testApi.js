@@ -14,9 +14,11 @@ var Api = require('../../lib/api'),
 
 describe('api', function () {
   describe('instantiate', function () {
-    it('should instantiate without error', function () {
-      var api = new Api();
-      expect(api).to.be.an.instanceof(Api);
+    it('should throw an error', function () {
+      var api;
+      expect(function () {
+        api = new Api();
+      }).to.throw(Error);
     });
   });
 });
