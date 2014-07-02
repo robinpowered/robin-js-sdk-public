@@ -24,9 +24,9 @@ module.exports = (function () {
       throw new TypeError('A Robin Access Token must be supplied');
     }
     Robin.super_.constructor.call(this);
-    var coreApiUrl = 'https://api.robinpowered.com/v1.0',
-        placesApiUrl = 'https://apps.robinpowered.com/v1.0',
-        gridUrl = 'https://grid.robinpowered.com/v1.0';
+    var coreApiUrl = 'https://api.robinpowered.com/v1.0/',
+        placesApiUrl = 'https://apps.robinpowered.com/v1.0/',
+        gridUrl = 'https://grid.robinpowered.com/v1.0/';
     this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
     this.grid = new RobinGrid(accessToken, gridUrl);
   }
