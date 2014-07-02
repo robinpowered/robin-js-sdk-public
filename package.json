@@ -1,6 +1,6 @@
 {
   "name": "robin-js-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A JavaScript SDK to communicate with the Robin platform.",
   "homepage": "https://github.com/robinpowered/robin-js-sdk",
   "repository": {
