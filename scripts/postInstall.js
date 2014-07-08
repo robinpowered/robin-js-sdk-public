@@ -29,8 +29,6 @@
       outputFilePath = distDir + '/' + outputFileName,
       outputFileMinifiedName = 'robin.browser.min.js',
       outputFileMinifiedPath = distDir + '/' + outputFileMinifiedName,
-      outputFileMinifiedSourceMapName = 'robin.browser.min.map',
-      outputFileMinifiedSourceMapPath = distDir + '/' + outputFileMinifiedSourceMapName,
       generateBrowserFiles,
       copyrightNotice = '/*' +
          '* robin-js-sdk' +
@@ -73,7 +71,6 @@
         console.log('Generated verbose source file in: ' + duration + ' seconds.');
         fs.writeFile(outputFilePath, verboseSrc, function (err) {
           var uglified,
-              sourceMap,
               toplevel,
               compressor;
           if (err) {
@@ -86,12 +83,11 @@
           }, 100);
 
           startTime = +new Date();
-          sourceMap = Uglify.SourceMap();
           toplevel = Uglify.parse(fs.readFileSync(outputFilePath, 'utf8'), {filename: 'robin.browser.js'});
 
           uglified = Uglify.OutputStream({
             ascii_only: true,
-            source_map: sourceMap
+            source_map: false
           });
 
           compressor = Uglify.Compressor({
@@ -117,12 +113,6 @@
               throw err;
             }
             console.log('Minified source file saved to dist/robin.browser.min.js');
-          });
-          fs.writeFile(outputFileMinifiedSourceMapPath, sourceMap.toString(), function (err) {
-            if (err) {
-              throw err;
-            }
-            console.log('Minified source map saved to dist/robin.browser.min.map');
           });
         });
       });
