@@ -27,28 +27,33 @@ describe('robin util', function () {
   describe('construct robin url', function () {
     describe('nonsense', function () {
       it('should throw an error when creating a test url', function () {
+        var testUrl;
         expect(function () {
-          var testUrl = rbnUtil.constructRobinUrl('nonsense', 'test');
+          testUrl = rbnUtil.constructRobinUrl('nonsense', 'test');
         }).to.throw(TypeError);
       });
       it('should throw an error when creating a staging url', function () {
+        var stagingUrl;
         expect(function () {
-          var stagingUrl = rbnUtil.constructRobinUrl('nonsense', 'staging');
+          stagingUrl = rbnUtil.constructRobinUrl('nonsense', 'staging');
         }).to.throw(TypeError);
       });
       it('should throw an error when creating a production url', function () {
+        var productionUrl;
         expect(function () {
-          var productionUrl = rbnUtil.constructRobinUrl('nonsense', 'production');
+          productionUrl = rbnUtil.constructRobinUrl('nonsense', 'production');
         }).to.throw(TypeError);
       });
       it('should throw an error when creating a production url', function () {
+        var productionUrl;
         expect(function () {
-          var productionUrl = rbnUtil.constructRobinUrl('nonsense');
+          productionUrl = rbnUtil.constructRobinUrl('nonsense');
         }).to.throw(TypeError);
       });
       it('should throw an error when creating a nonsense url', function () {
+        var fooUrl;
         expect(function () {
-          var fooUrl = rbnUtil.constructRobinUrl('nonsense', 'foo');
+          fooUrl = rbnUtil.constructRobinUrl('nonsense', 'foo');
         }).to.throw(TypeError);
       });
     });
