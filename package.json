@@ -58,14 +58,14 @@
     "grunt-mocha-test": "^0.11.0"
   },
   "dependencies": {
-    "request": "~2.34.0",
-    "winston": "~0.7.2",
-    "q": "~1.0.1",
-    "browser-request": "~0.3.1",
-    "faye": "^1.0.1",
-    "browserify": "^4.1.11",
+    "bluebird": "^2.3.0",
     "brfs": "^1.1.1",
-    "uglify-js": "^2.4.14"
+    "browser-request": "~0.3.1",
+    "browserify": "^4.1.11",
+    "faye": "^1.0.1",
+    "request": "~2.34.0",
+    "uglify-js": "^2.4.14",
+    "winston": "~0.7.2"
   },
   "browser": {
     "fs": "brfs",
