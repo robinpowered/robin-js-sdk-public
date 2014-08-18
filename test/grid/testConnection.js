@@ -13,7 +13,7 @@ var Connection = require('../../lib/grid/connection'),
     expect = chai.expect,
     Grid = require('../../lib/grid'),
     grid,
-    Promise = require('bluebird')
+    Promise = require('bluebird'),
     sinon = require('sinon');
 
 before(function () {
@@ -129,8 +129,7 @@ describe('grid - connection', function () {
         });
       });
       describe('stop listening', function () {
-        var subscriptionObj,
-            resolvedStub;
+        var resolvedStub;
         describe('error', function () {
           var connection;
           before(function () {
