@@ -13,8 +13,8 @@ var Connection = require('../../lib/grid/connection'),
     expect = chai.expect,
     Grid = require('../../lib/grid'),
     grid,
-    sinon = require('sinon'),
-    q = require('q');
+    Promise = require('bluebird')
+    sinon = require('sinon');
 
 before(function () {
   var accessToken = 'foo',
@@ -72,13 +72,10 @@ describe('grid - connection', function () {
     describe('listen to connection', function () {
       describe('error', function () {
         var connection,
-            deferred,
             resolvedStub;
         before(function () {
           connection = grid.device.connect(15);
-          deferred = q.defer();
-          deferred.reject('error');
-          resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(deferred.promise);
+          resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(Promise.reject('error'));
           connection.gridClient.subscribe = resolvedStub;
         });
         it('should receive an error', function (done) {
@@ -93,13 +90,10 @@ describe('grid - connection', function () {
       });
       describe('resolved', function () {
         var connection,
-            deferred,
             resolvedStub;
         before(function () {
           connection = grid.device.connect(15);
-          deferred = q.defer();
-          deferred.resolve('Resolved Message');
-          resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(deferred.promise);
+          resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(Promise.resolve('Resolved message'));
           connection.gridClient.subscribe = resolvedStub;
         });
         it('should set up a listener', function (done) {
@@ -137,18 +131,11 @@ describe('grid - connection', function () {
       describe('stop listening', function () {
         var subscriptionObj,
             resolvedStub;
-        before(function () {
-          subscriptionObj = q.defer();
-          subscriptionObj.resolve('Resolved Message');
-          subscriptionObj.promise.cancel = function () {
-            return undefined;
-          };
-        });
         describe('error', function () {
           var connection;
           before(function () {
             connection = grid.device.connect(15);
-            resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(subscriptionObj.promise);
+            resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(Promise.resolve('Resolved Message'));
             connection.gridClient.subscribe = resolvedStub;
           });
           it('should pass an error message', function (done) {
@@ -165,7 +152,7 @@ describe('grid - connection', function () {
           var connection;
           before(function () {
             connection = grid.device.connect(15);
-            resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(subscriptionObj.promise);
+            resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(Promise.resolve('Resolved Message'));
             connection.gridClient.subscribe = resolvedStub;
             connection.listen();
           });
@@ -185,13 +172,11 @@ describe('grid - connection', function () {
       describe('send error', function () {
         var connection,
             resolvedStub,
-            publishObj = q.defer(),
             message = {};
         message.foo = 'bar';
         before(function () {
           connection = grid.device.connect(15);
-          publishObj.reject('Can\'t send this message now');
-          resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(publishObj.promise);
+          resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(Promise.reject('Can\'t send this message now'));
           connection.gridClient.publish = resolvedStub;
         });
         it('should callback with an error', function (done) {
@@ -207,13 +192,11 @@ describe('grid - connection', function () {
       describe('send success', function () {
         var connection,
             resolvedStub,
-            publishObj = q.defer(),
             message = {};
         message.foo = 'bar';
         before(function () {
           connection = grid.device.connect(15);
-          publishObj.resolve('Message Sent Successfully');
-          resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(publishObj.promise);
+          resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(Promise.resolve('Message Sent Successfully'));
           connection.gridClient.publish = resolvedStub;
         });
         it('should callback with an error', function (done) {
