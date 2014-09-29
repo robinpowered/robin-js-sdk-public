@@ -69,15 +69,15 @@ Places API Routes:
 
 ### Robin Grid
 
-_The following is struck out in anticipation of the fact that I'll document this in a new PR_
+<sub>_TODO: Improve this section in a future PR_</sub>
 
-~~The Grid is a websocket server that allows PubSub between clients and devices through configured channels. The Grid module is an `EventEmitter`, to allow real-time updates.
+The Grid is a websocket server that allows PubSub between clients and devices through configured channels. The Grid module is an `EventEmitter`, to allow real-time updates.
 
 The Grid exposes several modules, which allow you to connect and listen:
 
 * `join` - Allows clients to listen to updates from channels
 * `leave` - Disconnects the client from receiving updates for a particular channel
-* `send` - Allows a client to send messages to a channel.~~
+* `send` - Allows a client to send messages to a channel.
 
 ## Development Roadmap
 
