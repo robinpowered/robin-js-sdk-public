@@ -53,8 +53,8 @@ describe('api - base', function () {
       expect(apiBase.getRelayIdentifier()).to.equal(relayIdentifier);
     });
   });
-  describe('reject request', function (done) {
-    it('should reject a request', function () {
+  describe('reject request', function () {
+    it('should reject a request', function (done) {
       var apiBase = new ApiBase();
       apiBase.rejectRequest().should.be.rejected.and.notify(done);
     });

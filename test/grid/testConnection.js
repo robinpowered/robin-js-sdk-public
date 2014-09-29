@@ -73,12 +73,10 @@ describe('grid - connection', function () {
       describe('error', function () {
         var connection,
             resolvedStub;
-        before(function () {
+        it('should receive an error', function (done) {
           connection = grid.device.connect(15);
           resolvedStub = sinon.stub(connection.gridClient, 'subscribe').returns(Promise.reject('error'));
           connection.gridClient.subscribe = resolvedStub;
-        });
-        it('should receive an error', function (done) {
           connection.listen(function (err, resp) {
             expect(err).to.not.be.null;
             done();
@@ -173,12 +171,10 @@ describe('grid - connection', function () {
             resolvedStub,
             message = {};
         message.foo = 'bar';
-        before(function () {
+        it('should callback with an error', function (done) {
           connection = grid.device.connect(15);
           resolvedStub = sinon.stub(connection.gridClient, 'publish').returns(Promise.reject('Can\'t send this message now'));
           connection.gridClient.publish = resolvedStub;
-        });
-        it('should callback with an error', function (done) {
           connection.send('data', message, function (err, resp) {
             expect(err).to.not.be.null;
             done();
