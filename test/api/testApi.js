@@ -20,5 +20,17 @@ describe('api', function () {
         api = new Api();
       }).to.throw(Error);
     });
+    it('should throw an error when setting up the Core API', function () {
+      var api;
+      expect(function () {
+        api = new Api('foo');
+      }).to.throw(Error);
+    });
+    it('should throw an error when setting up the Places API', function () {
+      var api;
+      expect(function () {
+        api = new Api('foo', 'bar');
+      }).to.throw(Error);
+    });
   });
 });

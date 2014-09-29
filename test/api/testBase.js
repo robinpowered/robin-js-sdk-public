@@ -59,4 +59,24 @@ describe('api - base', function () {
       apiBase.rejectRequest().should.be.rejected.and.notify(done);
     });
   });
+  describe('construct path', function () {
+    describe('empty string', function () {
+      it('should return an empty string', function () {
+        var apiBase = new ApiBase();
+        expect(apiBase.constructPath()).to.equal('/');
+      });
+    });
+    describe('multiple strings', function () {
+      it('should return an empty string', function () {
+        var apiBase = new ApiBase();
+        expect(apiBase.constructPath('foo', 'bar', 'baz')).to.equal('/foo/bar/baz');
+      });
+    });
+    describe('multiple strings, including empty', function () {
+      it('should return an empty string', function () {
+        var apiBase = new ApiBase();
+        expect(apiBase.constructPath('foo', '', 'bar', '', 'baz')).to.equal('/foo/bar/baz');
+      });
+    });
+  });
 });
