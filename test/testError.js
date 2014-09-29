@@ -25,7 +25,7 @@ describe('error', function () {
       body: {
         foo: 'bar'
       }
-    }
+    };
     err = new error.ApiError(foo);
     expect(err.message).to.equal(foo.toString());
   });
@@ -37,7 +37,7 @@ describe('error', function () {
           foo: 'bar'
         }
       }
-    }
+    };
     err = new error.ApiError(foo);
     expect(err.message).to.not.equal(foo.toString());
   });
