@@ -20,16 +20,14 @@ module.exports = (function () {
       util = require('util'),
       EventEmitter = require('events').EventEmitter;
 
-  function Robin (accessToken, env) {
+  function Robin (accessToken, opts) {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
     Robin.super_.constructor.call(this);
-    var coreApiUrl = RbnUtil.constructRobinUrl('api', env),
-        placesApiUrl = RbnUtil.constructRobinUrl('apps', env),
-        gridUrl = RbnUtil.constructRobinUrl('grid', env);
-    this.api = new RobinApi(accessToken, coreApiUrl, placesApiUrl);
-    this.grid = new RobinGrid(accessToken, gridUrl);
+    var urls = RbnUtil.buildRobinUrls(opts);
+    this.api = new RobinApi(accessToken, urls.core, urls.places);
+    this.grid = new RobinGrid(accessToken, urls.grid);
   }
 
   util.inherits(Robin, EventEmitter);
