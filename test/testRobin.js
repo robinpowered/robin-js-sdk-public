@@ -23,6 +23,9 @@ describe('robin', function () {
     it('should instantiate without error', function () {
       var robin = new Robin('SampleAccessToken');
       expect(robin).to.be.an.instanceof(Robin);
+      expect(robin.api.Core.getBaseUrl()).to.equal('https://api.robinpowered.com/v1.0');
+      expect(robin.api.Places.getBaseUrl()).to.equal('https://apps.robinpowered.com/v1.0');
+      expect(robin.grid.getGridUrl()).to.equal('https://grid.robinpowered.com/v1.0');
     });
   });
   describe('relay identifier', function () {
