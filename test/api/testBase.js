@@ -53,10 +53,30 @@ describe('api - base', function () {
       expect(apiBase.getRelayIdentifier()).to.equal(relayIdentifier);
     });
   });
-  describe('reject request', function (done) {
-    it('should reject a request', function () {
+  describe('reject request', function () {
+    it('should reject a request', function (done) {
       var apiBase = new ApiBase();
       apiBase.rejectRequest().should.be.rejected.and.notify(done);
+    });
+  });
+  describe('construct path', function () {
+    describe('empty string', function () {
+      it('should return an empty string', function () {
+        var apiBase = new ApiBase();
+        expect(apiBase.constructPath()).to.equal('/');
+      });
+    });
+    describe('multiple strings', function () {
+      it('should return an empty string', function () {
+        var apiBase = new ApiBase();
+        expect(apiBase.constructPath('foo', 'bar', 'baz')).to.equal('/foo/bar/baz');
+      });
+    });
+    describe('multiple strings, including empty', function () {
+      it('should return an empty string', function () {
+        var apiBase = new ApiBase();
+        expect(apiBase.constructPath('foo', '', 'bar', '', 'baz')).to.equal('/foo/bar/baz');
+      });
     });
   });
 });
