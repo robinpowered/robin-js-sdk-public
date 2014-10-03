@@ -17,20 +17,16 @@ module.exports = (function () {
   var RobinApi = require('./lib/api'),
       RobinGrid = require('./lib/grid'),
       RbnUtil = require('./lib/util'),
-      util = require('util'),
-      EventEmitter = require('events').EventEmitter;
+      util = require('util');
 
   function Robin (accessToken, opts) {
     if (!accessToken) {
       throw new TypeError('A Robin Access Token must be supplied');
     }
-    Robin.super_.constructor.call(this);
     var urls = RbnUtil.buildRobinUrls(opts);
     this.api = new RobinApi(accessToken, urls.core, urls.places);
     this.grid = new RobinGrid(accessToken, urls.grid);
   }
-
-  util.inherits(Robin, EventEmitter);
 
   /**
    * Set a relay identifier for requests to Robin
