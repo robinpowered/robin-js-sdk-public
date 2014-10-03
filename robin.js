@@ -16,8 +16,7 @@
 module.exports = (function () {
   var RobinApi = require('./lib/api'),
       RobinGrid = require('./lib/grid'),
-      RbnUtil = require('./lib/util'),
-      util = require('util');
+      RbnUtil = require('./lib/util');
 
   function Robin (accessToken, opts) {
     if (!accessToken) {
